@@ -1,48 +1,93 @@
 library(dplyr)
 library(plotly)
 
-primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
-county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
 
-joined_data <- left_join(primary, county, by="fips")
-joined_data$state_abbreviation.y <- NULL
-joined_data$area_name <- NULL
-
-bernie_by_state <- joined_data  %>% 
-                  select(state, candidate, votes) %>% 
-                  filter(candidate == 'Bernie Sanders') %>% 
-                  group_by(state) %>% 
-                  summarise(bernie_votes = sum(votes))
-hillary_by_state <- joined_data  %>% 
-                  select(state, candidate, votes) %>% 
-                  filter(candidate == 'Hillary Clinton') %>% 
-                  group_by(state) %>% 
-                  summarise(hillary_votes = sum(votes))
-joined_by_state_dem <- left_join(bernie_by_state, hillary_by_state, by="state")
-
-
-p <- plot_ly(joined_by_state_dem, x = ~state, y = ~bernie_votes, type = 'bar', name = 'Bernie Sanders') %>%
-  add_trace(y = ~hillary_votes, name = 'Hillary Clinton') %>%
-  layout(yaxis = list(title = 'Count'), barmode = 'stack')
-
-
-# give state boundaries a white border
-l <- list(color = toRGB("white"), width = 2)
-# specify some map projection/options
-g <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white')
-)
-
-map <- plot_geo(joined_by_state_dem, locationmode = 'USA-states') %>%
-  add_trace(
-    z1 = ~bernie_votes, text = "Hillary Clinton", locations = ~state,
-    color = ~bernie_votes, colors = 'Purples'
-  ) %>%
-  colorbar(title = "Millions USD") %>%
-  layout(
-    title = '2011 US Agriculture Exports by State<br>(Hover for breakdown)',
-    geo = g
-  )
+# read in data
+shinyServer(function(input, output) {
+  
+  primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
+  county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
+  
+  
+  #create final data frame
+  joined_data <- left_join(primary, county, by="fips")
+  final_data <- joined_data %>%
+    select(state, state_abbreviation.x, county, party, candidate, votes,
+           SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
+           RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
+  colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
+                            'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
+                            'white', 'highschool', 'bachelors', 'income')
+  # View(final_data)
+  
+  
+  
+  # Create data by county
+  bernie_by_county <- final_data  %>% 
+    filter(candidate == 'Bernie Sanders') %>% 
+    group_by(county) %>% 
+    summarise(bernie_votes = sum(votes), abb = first(abb), black = mean(black), 
+              asian = mean(asian), hispanic = mean(hispanic), white = mean(white),
+              highschool = mean(highschool), bachelors = mean(bachelors), income = mean(income))
+  hillary_by_county <- final_data  %>% 
+    filter(candidate == 'Hillary Clinton') %>% 
+    group_by(county) %>% 
+    summarise(hillary_votes = sum(votes))
+  dem_by_county <- left_join(bernie_by_county, hillary_by_county, by="county") %>%
+    mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
+           z = ifelse(winner == "Bernie", 1, 0))  %>%
+           na.omit()
+  # View(dem_by_county)
+  
+  
+  # bar plot1: democrat counties won
+  output$plot1 <- renderPlotly({
+    #filter based on user input
+    filtered.blacks <- dem_by_county %>% filter(black >= input$slider1)
+    filtered.bachelors <- filtered.blacks %>% filter(bachelors >= input$slider2)
+    filtered.income <- filtered.bachelors %>% filter(income >= input$slider3)
+    filtered.df <- filtered.income
+    
+    # stats
+    nrow(dem_by_county)
+    bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
+    hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
+    # sum(filtered.df$bernie_votes)
+    # sum(filtered.df$hillary_votes)
+    
+    #county bar chart
+    p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#blue")) %>%
+      add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#orange")) %>%
+      layout(title = "Counties Won for Democratic Candidates",
+             xaxis = list(title = "Candidates "),
+             yaxis = list(title = 'Counties won', range=c(0, 1000)))
+    return (p)
+  })
+  
+  # bar plot2: democrat popular vote
+  output$plot2 <- renderPlotly({
+    #filter based on user input
+    filtered.blacks <- dem_by_county %>% filter(black >= input$slider1)
+    filtered.bachelors <- filtered.blacks %>% filter(bachelors >= input$slider2)
+    filtered.income <- filtered.bachelors %>% filter(income >= input$slider3)
+    filtered.df <- filtered.income
+    
+    # stats
+    nrow(dem_by_county)
+    bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
+    hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
+    bernie_votes <- sum(filtered.df$bernie_votes)
+    hillary_votes <- sum(filtered.df$hillary_votes)
+    
+    #county bar chart
+    p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = list(color = "#blue")) %>%
+      add_trace(x = "Hillary", name = "Hillary", y = hillary_votes, marker = list(color = "#orange")) %>%
+      layout(title = "Popular Vote for Democratic Candidates",
+             xaxis = list(title = "Candidates "),
+             yaxis = list(title = 'Popular vote', range=c(0, 12000000)))
+    return (p)
+  })
+  
+  
+})
+  
