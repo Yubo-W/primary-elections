@@ -1,6 +1,8 @@
 library(dplyr)
 library(plotly)
 
+# setwd('/Users/iguest/Documents/final-project-I-mWithHer')
+
 primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
 county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
 #county.key <- read.csv('./data/county_facts_key.csv', stringsAsFactors = FALSE)

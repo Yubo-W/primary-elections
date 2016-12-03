@@ -49,11 +49,9 @@ shinyServer(function(input, output) {
     filtered.df <- filtered.income
     
     # stats
-    nrow(dem_by_county)
     bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
     hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
-    # sum(filtered.df$bernie_votes)
-    # sum(filtered.df$hillary_votes)
+
     
     #county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#blue")) %>%
@@ -73,7 +71,6 @@ shinyServer(function(input, output) {
     filtered.df <- filtered.income
     
     # stats
-    nrow(dem_by_county)
     bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
     hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
     bernie_votes <- sum(filtered.df$bernie_votes)
@@ -85,6 +82,20 @@ shinyServer(function(input, output) {
       layout(title = "Popular Vote for Democratic Candidates",
              xaxis = list(title = "Candidates "),
              yaxis = list(title = 'Popular vote', range=c(0, 12000000)))
+    return (p)
+  })
+  
+  
+  # chart #3
+  output$plot3 <- renderPlotly({
+    #filter based on user input
+    filtered.blacks <- dem_by_county %>% filter(black >= input$slider1)
+    filtered.bachelors <- filtered.blacks %>% filter(bachelors >= input$slider2)
+    filtered.income <- filtered.bachelors %>% filter(income >= input$slider3)
+    filtered.df <- filtered.income
+    
+    
+    
     return (p)
   })
   
