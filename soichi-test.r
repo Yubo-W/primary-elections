@@ -18,6 +18,7 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
 View(final_data)
 
 
+
 #combining data by state
 bernie_by_state <- final_data  %>% 
   filter(candidate == 'Bernie Sanders') %>% 
