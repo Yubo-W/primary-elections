@@ -12,7 +12,7 @@ source("./scripts/functions.R")
 #create final data frame
 joined_data <- left_join(primary, county, by="fips")
 final_data <- joined_data %>% na.omit() %>%
-              select(state, state_abbreviation.x, county, party, candidate, votes,
+              select(state, state_abbreviation, county, party, candidate, votes,
                      SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
                      RHI725214, RHI825214, EDU635213, EDU685213)
 colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
@@ -20,7 +20,6 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
                           'white', 'highschool', 'bachelors')
 # View(final_data)
 nrow(final_data) #17479 / 24611 (over 7000 missing)
-
 
 
 #combining data by state
@@ -106,9 +105,9 @@ sum(dem_by_state$hillary_votes) #15692452 votes
 
 
 #bar chart
-plot_ly(dem_by_state, x = ~abb, y = ~bernie_votes, type = 'bar', name = 'Bernie Sanders', 
+plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Bernie Sanders', 
         marker = list(color = "#orange", line = list(color = ifelse(dem_by_state$winner == "Bernie", "blue", "orange"), width = 3))) %>%
-  add_trace(y = ~hillary_votes, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
+  add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
   layout(title = "Primary Elections Democratic Party Votes Dispersion",
          xaxis = list(title = "States"),
          yaxis = list(title = 'Votes'), barmode = 'stack')
