@@ -164,6 +164,5 @@ plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = 
 
 ################################################################################################
 # Now group by state2
-source("./scripts/functions.R")
 test <- ByState2(dem_by_county, "Bernie Sanders")
 View(test)
