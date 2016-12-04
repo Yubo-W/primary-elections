@@ -24,7 +24,6 @@ nrow(final_data) #17479 / 24611 (over 7000 missing)
 
 
 #combining data by state
-
 bernie_by_state <- ByState("Bernie Sanders")
 hillary_by_state <- ByState("Hillary Clinton")
 trump_by_state <- ByState('Donald Trump')
@@ -38,6 +37,7 @@ dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb",
          z = ifelse(winner == "Bernie", 1, 0))
 View(dem_by_state)
 
+<<<<<<< c044230f0e5a17d6cb8472e92f9ca56d2a453731
 rep_by_state <- left_join(trump_by_state, kasich_by_state, by=c("state","abb","county")) %>% 
   left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
   left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
@@ -78,6 +78,20 @@ rep_by_state <- rep_by_state %>%
   } else {
     z = 4
   })
+=======
+
+
+rep_by_state <- left_join(trump_by_state, kasich_by_state, by="state") %>% 
+  left_join(., rubio_by_state, by="state") %>% 
+  left_join(., cruz_by_state, by="state") %>% 
+  left_join(., carson_by_state, by="state") %>% 
+  mutate(winner= ifelse(trump_by_state > kasich_by_state && 
+                          trump_by_state > rubio_by_state &&
+                          trump_by_state > cruz_by_state &&
+                          trump_by_state > carson_by_state,
+                        "Bernie", "Hillary"),
+         z = ifelse(winner == "Bernie", 1, 0))
+>>>>>>> fixed by_county
 
 
 
@@ -126,38 +140,36 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 
 
 
-
+################################################################################################
 # Create data by county
-#select by county for just bernie. Deselect candidate column for joining
-bernie_by_county <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
-  select(-candidate)
+#select all information and filter by choosing any candidate
+join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
+  select(-candidate, -votes)
 #change colname for joining
 colnames(bernie_by_county)[colnames(bernie_by_county) == "votes"] <- "bernie_votes"
-View(bernie_by_county)
+
+bernie_by_county <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
+  select(county = county, abb = abb, bernie_votes = votes)
 
 hillary_by_county <- final_data  %>% filter(candidate == 'Hillary Clinton') %>% 
   select(county = county, abb = abb, hillary_votes = votes)
+
 # nrow(bernie_by_county)
 # nrow(hillary_by_county)
 # nrow(dem_by_county)
 
 #Join data
-dem_by_county <- left_join(bernie_by_county, hillary_by_county, by=c("abb", "county")) %>%
+dem_by_county <- left_join(join_with, bernie_by_county, by=c("abb", "county")) %>%
+  left_join(., hillary_by_county, by=c("abb", "county")) %>% 
   mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
-
 nrow(dem_by_county) #2798/4205
 View(dem_by_county)
-
-#filter
-# filtered.df <- dem_by_county %>% filter(black > 25)
 
 # stats
 bernie_countys <- nrow(dem_by_county %>% filter(winner=="Bernie")) #1129counties
 hillary_countys <- nrow(dem_by_county %>% filter(winner=="Hillary")) #1669 counties
 bernie_votes <- sum(dem_by_county$bernie_votes)
 hillary_votes <- sum(dem_by_county$hillary_votes)
-
-
 
 #counties won bar chart
 plot_ly(x = "Bernie", name = "Bernie", y = bernie_countys, type = "bar", marker = list(color = "#blue")) %>%
@@ -171,4 +183,4 @@ plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = 
   add_trace(x = "Hillary", name = "Hillary", y = hillary_votes, marker = list(color = "#orange")) %>%
   layout(title = "Popular vote for Democratic Candidates",
          xaxis = list(title = "Candidates "),
-         yaxis = list(title = 'Popular Vote', range=c(0, 15000000)))
+         yaxis = list(title = 'Popular Vote', range=c(0, 16000000)))
