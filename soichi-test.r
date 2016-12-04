@@ -11,7 +11,7 @@ source("./scripts/functions.R")
 
 #create final data frame
 joined_data <- left_join(primary, county, by="fips")
-final_data <- joined_data %>%
+final_data <- joined_data %>%  na.omit() %>%
   select(state, state_abbreviation.x, county, party, candidate, votes,
          SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
          RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
@@ -22,15 +22,14 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
 nrow(final_data) #17479 / 24611 (over 7000 missing)
 
 
-
 #combining data by state
-bernie_by_state <- ByState("Bernie Sanders")
-hillary_by_state <- ByState("Hillary Clinton")
-trump_by_state <- ByState('Donald Trump')
-kasich_by_state <- ByState("John Kasich")
-rubio_by_state <- ByState("Marco Rubio")
-cruz_by_state <- ByState("Ted Cruz")
-carson_by_state <- ByState("Ben Carson")
+bernie_by_state <- ByState(final_data, "Bernie Sanders")
+hillary_by_state <- ByState(final_data, "Hillary Clinton")
+trump_by_state <- ByState(final_data, 'Donald Trump')
+kasich_by_state <- ByState(final_data, "John Kasich")
+rubio_by_state <- ByState(final_data, "Marco Rubio")
+cruz_by_state <- ByState(final_data, "Ted Cruz")
+carson_by_state <- ByState(final_data, "Ben Carson")
 
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
   mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
@@ -92,12 +91,12 @@ sum(dem_by_state$hillary_votes) #15692452 votes
 
 
 #bar chart
-plot_ly(dem_by_state, x = ~abb, y = ~bernie_votes, type = 'bar', name = 'Bernie Sanders', 
+plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Bernie Sanders', 
         marker = list(color = "#orange", line = list(color = ifelse(dem_by_state$winner == "Bernie", "blue", "orange"), width = 3))) %>%
-  add_trace(y = ~hillary_votes, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
+  add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
   layout(title = "Primary Elections Democratic Party Votes Dispersion",
          xaxis = list(title = "States"),
-         yaxis = list(title = 'Votes'), barmode = 'stack')
+         yaxis = list(title = 'Votes', range=c(0, 3500000)), barmode = 'stack')
 
 
 
@@ -132,8 +131,8 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
   select(-candidate, -votes)
 
-bernie_by_county <- ByCounty("Bernie Sanders")
-hillary_by_county <- ByCounty("Hillary Clinton")
+bernie_by_county <- ByCounty(final_data, "Bernie Sanders")
+hillary_by_county <- ByCounty(final_data, "Hillary Clinton")
 
 #Join data
 dem_by_county <- left_join(join_with, bernie_by_county, by=c("abb", "county")) %>%
@@ -161,3 +160,10 @@ plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = 
   layout(title = "Popular vote for Democratic Candidates",
          xaxis = list(title = "Candidates "),
          yaxis = list(title = 'Popular Vote', range=c(0, 16000000)))
+
+
+################################################################################################
+# Now group by state2
+source("./scripts/functions.R")
+test <- ByState2(dem_by_county, "Bernie Sanders")
+View(test)

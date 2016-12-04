@@ -76,9 +76,57 @@ shinyServer(function(input, output) {
   
   
   # chart #3
-  # output$plot3 <- renderPlotly({
-  #   return (p)
-  # })
+  output$plot3 <- renderPlotly({
+    filtered.df <- FilterByUserInput(dem_by_county, input$slider1, input$slider2, input$slider3)
+    
+    bernie_by_state <- ByState2(filtered.df, "Bernie Sanders")
+    hillary_by_state <- ByState2(filtered.df, "Hillary Clinton")
+    dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
+      mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
+             z = ifelse(winner == "Bernie", 1, 0))
+    
+    p <- plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Bernie Sanders', 
+            marker = list(color = "#orange", line = list(color = ifelse(dem_by_state$winner == "Bernie", "blue", "orange"), width = 3))) %>%
+      add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
+      layout(title = "Primary Elections Democratic Party Votes Dispersion",
+             xaxis = list(title = "States"),
+             yaxis = list(title = 'Votes', range=c(0, 3500000)), barmode = 'stack')
+    return (p)
+  })
+  
+  #  chart 4
+  output$plot4 <- renderPlotly({
+    filtered.df <- FilterByUserInput(dem_by_county, input$slider1, input$slider2, input$slider3)
+    
+    bernie_by_state <- ByState2(filtered.df, "Bernie Sanders")
+    hillary_by_state <- ByState2(filtered.df, "Hillary Clinton")
+    dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
+      mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
+             z = ifelse(winner == "Bernie", 1, 0))
+  
+    l <- list(color = toRGB("white"), width = 2)
+    # specify some map projection/options
+    g <- list(
+      scope = 'usa',
+      projection = list(type = 'albers usa'),
+      showlakes = TRUE,
+      lakecolor = toRGB('white')
+    )
+    p <- plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
+      add_trace(
+        z = ~z,
+        text = ~winner,
+        locations = ~abb,
+        color = ~z,
+        colors = c('orange', 'blue')
+      ) %>%
+      layout(
+        title = 'Bernie Vs Hillary Map',
+        geo = g
+      )
+
+    return (p)
+  })
   
   
 })
