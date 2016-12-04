@@ -7,6 +7,7 @@ primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
 county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
 #county.key <- read.csv('./data/county_facts_key.csv', stringsAsFactors = FALSE)
 #View(county.key)
+source("./scripts/functions.R")
 
 #create final data frame
 joined_data <- left_join(primary, county, by="fips")
@@ -17,7 +18,7 @@ final_data <- joined_data %>%
 colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                           'white', 'highschool', 'bachelors')
-View(final_data)
+# View(final_data)
 
 #testing
 # democrat <- final_data %>% filter(party == 'Democrat')
@@ -33,19 +34,35 @@ View(final_data)
 
 
 #combining data by state
-bernie_by_state <- final_data  %>% 
-  filter(candidate == 'Bernie Sanders') %>% 
-  group_by(state) %>% 
-  summarise(bernie_votes = sum(votes), abb = first(abb), county = n())
-hillary_by_state <- final_data  %>% 
-  filter(candidate == 'Hillary Clinton') %>% 
-  group_by(state) %>% 
-  summarise(hillary_votes = sum(votes))
+ByState <- function(person) {
+  temp <- final_data %>% 
+          filter(candidate == person) %>% 
+          group_by(state) %>% 
+          summarize(votes = sum(votes), abb = first(abb), county = n())
+  return(temp)
+}
 
-dem_by_state <- left_join(bernie_by_state, hillary_by_state, by="state") %>%
+bernie_by_state <- ByState("Bernie Sanders")
+hillary_by_state <- ByState("Hillary Clinton")
+trump_by_state <- ByState('Donald Trump')
+john_kasich <- ByState("John Kasich")
+marco_rubio <- ByState("Marco Rubio")
+ted_cruz <- ByState("Ted Cruz")
+ben_carson <- ByState("Ben Carson")
+
+dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
   mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
-View(dem_by_state)
+# View(dem_by_state)
+
+rep_by_state <- left_join(trump_by_state, john_kasich, by="state") %>% 
+  left_join(., marco_rubio, by="state") %>% 
+  left_join(., ted_cruz, by="state") %>% 
+  left_join(., ben_carson, by="state") %>% 
+  mutate(winner= ifelse(trump_by_state > john_kasich && 
+                        trump_by_state > marco_rubio,
+                        "Bernie", "Hillary"),
+         z = ifelse(winner == "Bernie", 1, 0))
 
 
 
@@ -140,4 +157,3 @@ plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = 
   layout(title = "Popular vote for Democratic Candidates",
          xaxis = list(title = "Candidates "),
          yaxis = list(title = 'Popular Vote', range=c(0, 15000000)))
-

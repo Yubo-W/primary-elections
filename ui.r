@@ -1,18 +1,32 @@
 library(plotly)
 
 
-shinyUI(fluidPage(
+shinyUI(navbarPage('Primary Election',
+                   tabPanel('Democratic',
+                            titlePanel('Electoral College Votes'),
+                            # Create sidebar layout
+                            sidebarLayout(
+                              
+                              # Side panel for controls
+                              sidebarPanel(
+                                
+                                # Input to select variable to map
+                                sliderInput("slider1", label=h3("African American Minimum Percentage"), min = 0, max = 50, value = 0),
+                                sliderInput("slider2", label=h3("Bachelors Degree Minimum Percentage"), min = 0, max = 60, value = 0),
+                                sliderInput("slider3", label=h3("Minimum Household Income"), min = 0, max = 100000, value = 0)
+                              ),
+                              
   mainPanel(
     br(),
     br(),
     br(),
     h2("Look at just the counties with a certain minimum percentage of the values you choose."),
-    column(4, sliderInput("slider1", label=h3("African American Minimum Percentage"), min = 0, max = 50, value = 0)
-    ),
-    column(4, sliderInput("slider2", label=h3("Bachelors Degree Minimum Percentage"), min = 0, max = 60, value = 0)
-    ),
-    column(4, sliderInput("slider3", label=h3("Minimum Household Income"), min = 0, max = 100000, value = 0)
-    ),
+    #column(4, sliderInput("slider1", label=h3("African American Minimum Percentage"), min = 0, max = 50, value = 0)
+    #),
+    #column(4, sliderInput("slider2", label=h3("Bachelors Degree Minimum Percentage"), min = 0, max = 60, value = 0)
+    #),
+    #column(4, sliderInput("slider3", label=h3("Minimum Household Income"), min = 0, max = 100000, value = 0)
+    #),
     br(),
     br(),
     br(),
@@ -28,4 +42,5 @@ shinyUI(fluidPage(
     br(),
     plotlyOutput('plot1')
   )
+                            ))
 ))
