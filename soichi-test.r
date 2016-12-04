@@ -11,7 +11,7 @@ source("./scripts/functions.R")
 
 #create final data frame
 joined_data <- left_join(primary, county, by="fips")
-final_data <- joined_data %>%
+final_data <- joined_data %>% na.omit() %>%
               select(state, state_abbreviation.x, county, party, candidate, votes,
                      SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
                      RHI725214, RHI825214, EDU635213, EDU685213)
@@ -19,6 +19,7 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                           'white', 'highschool', 'bachelors')
 # View(final_data)
+nrow(final_data) #17479 / 24611 (over 7000 missing)
 
 
 
@@ -112,8 +113,8 @@ hillary_by_county <- final_data  %>% filter(candidate == 'Hillary Clinton') %>%
 
 #Join data
 dem_by_county <- left_join(bernie_by_county, hillary_by_county, by=c("abb", "county")) %>%
-  mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0)) %>%
-  na.omit()
+  mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
+
 nrow(dem_by_county) #2798/4205
 View(dem_by_county)
 
