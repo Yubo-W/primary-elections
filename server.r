@@ -87,17 +87,14 @@ shinyServer(function(input, output) {
   
   
   # chart #3
-  output$plot3 <- renderPlotly({
-    #filter based on user input
-    filtered.blacks <- dem_by_county %>% filter(black >= input$slider1)
-    filtered.bachelors <- filtered.blacks %>% filter(bachelors >= input$slider2)
-    filtered.income <- filtered.bachelors %>% filter(income >= input$slider3)
-    filtered.df <- filtered.income
-    
-    
-    
-    return (p)
-  })
+  # output$plot3 <- renderPlotly({
+  #   #filter based on user input
+  #   filtered.blacks <- dem_by_county %>% filter(black >= input$slider1)
+  #   filtered.bachelors <- filtered.blacks %>% filter(bachelors >= input$slider2)
+  #   filtered.income <- filtered.bachelors %>% filter(income >= input$slider3)
+  #   filtered.df <- filtered.income
+  #   return (p)
+  # })
   
   
 })

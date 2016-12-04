@@ -33,7 +33,7 @@ cruz_by_state <- ByState("Ted Cruz")
 carson_by_state <- ByState("Ben Carson")
 
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
-  mutate(winner= ifelse(Bernie Sanders > Hillary Clinton, "Bernie", "Hillary"),
+  mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
 View(dem_by_state)
 
