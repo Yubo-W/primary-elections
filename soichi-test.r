@@ -5,6 +5,7 @@ primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
 county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
 #county.key <- read.csv('./data/county_facts_key.csv', stringsAsFactors = FALSE)
 #View(county.key)
+source("./scripts/functions.R")
 
 #create final data frame
 joined_data <- left_join(primary, county, by="fips")
@@ -20,13 +21,6 @@ View(final_data)
 
 
 #combining data by state
-ByState <- function(person) {
-  temp <- final_data %>% 
-          filter(candidate == person) %>% 
-          group_by(state) %>% 
-          summarize(votes = sum(quote(votes)))
-  return(temp)
-}
 
 bernie_by_state <- ByState("Bernie Sanders")
 hillary_by_state <- ByState("Hillary Clinton")
