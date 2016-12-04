@@ -20,14 +20,17 @@ View(final_data)
 
 
 #combining data by state
-bernie_by_state <- final_data  %>% 
-  filter(candidate == 'Bernie Sanders') %>% 
-  group_by(state) %>% 
-  summarise(bernie_votes = sum(votes), abb = first(abb), county = n())
-hillary_by_state <- final_data  %>% 
-  filter(candidate == 'Hillary Clinton') %>% 
-  group_by(state) %>% 
-  summarise(hillary_votes = sum(votes))
+ByState <- function(person) {
+  temp <- final_data %>% 
+          filter(candidate == person) %>% 
+          group_by(state) %>% 
+          summarize(votes = sum(quote(votes)))
+  return(temp)
+}
+
+bernie_by_state <- ByState("Bernie Sanders")
+hillary_by_state <- ByState("Hillary Clinton")
+trump_by_state <- ByState('Donald Trump')
 
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by="state") %>%
   mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
