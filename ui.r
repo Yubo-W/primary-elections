@@ -3,7 +3,10 @@ library(plotly)
 
 shinyUI(navbarPage('Primary Election',
                    tabPanel('Democratic',
-                            titlePanel('Electoral College Votes'),
+                            titlePanel('Primary Election Democratic Party Statistics'),
+                            h3('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hu'),
+                            br(),
+                            br(),
                             br(),
                             br(),
                             # Create sidebar layout
@@ -11,16 +14,27 @@ shinyUI(navbarPage('Primary Election',
                               
                               # Side panel for controls
                               sidebarPanel(
-                                h2("Select the counties within the range you are interested for."),
+                                h2("Select only the counties within the range you are interested for."),
                                 br(),
                                 br(),
                                 br(),
                                 br(),
                                 br(),
                                 # Input to select variable to map
-                                sliderInput("slider1", label=h3("African American Percentage"), min = 0, max = 100, value = c(0, 100)),
-                                sliderInput("slider2", label=h3("Bachelors Degree Percentage"), min = 0, max = 100,  value = c(0, 100)),
-                                sliderInput("slider3", label=h3("Household Income"), min = 0, max = 100000,  value = c(0, 100000))
+                                h3("Ethnicities"),
+                                sliderInput("race1", label=h4("African American Percentage"), min = 0, max = 100, value = c(0, 100)),
+                                sliderInput("race2", label=h4("Caucasian Percentage"), min = 0, max = 100, value = c(0, 100)),
+                                sliderInput("race3", label=h4("Asian Percentage"), min = 0, max = 100, value = c(0, 100)),
+                                sliderInput("race4", label=h4("Hispanic Percentage"), min = 0, max = 100, value = c(0, 100)),
+                                br(),
+                                br(),
+                                h3("Education"),
+                                sliderInput("education1", label=h4("High School Graduate Percentage"), min = 0, max = 100,  value = c(0, 100)),
+                                sliderInput("education2", label=h4("College Graduate Percentage"), min = 0, max = 100,  value = c(0, 100)),
+                                br(),
+                                br(),
+                                h3("Income"),
+                                sliderInput("income1", label=h4("Household Income"), min = 0, max = 100000,  value = c(0, 100000))
                               ),
                               
   mainPanel(

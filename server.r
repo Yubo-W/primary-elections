@@ -40,7 +40,7 @@ shinyServer(function(input, output) {
   # bar plot1: democrat counties won
   output$plot1 <- renderPlotly({
     #filter based on user input
-    filtered.df <- FilterByUserInput(dem_by_county, input$slider1, input$slider2, input$slider3)
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     # stats
     bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
@@ -50,7 +50,7 @@ shinyServer(function(input, output) {
     #county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#blue")) %>%
       add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#orange")) %>%
-      layout(title = "Counties Won for Democratic Candidates",
+      layout(title = "Number of Counties Won",
              xaxis = list(title = "Candidates "),
              yaxis = list(title = 'Counties won', range=c(0, 1800)))
     return (p)
@@ -59,7 +59,7 @@ shinyServer(function(input, output) {
   # bar plot2: democrat popular vote
   output$plot2 <- renderPlotly({
     #filter based on user input
-    filtered.df <- FilterByUserInput(dem_by_county, input$slider1, input$slider2, input$slider3)
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     # stats
     bernie_votes <- sum(filtered.df$Bernie_Sanders)
@@ -68,7 +68,7 @@ shinyServer(function(input, output) {
     #county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = list(color = "#blue")) %>%
       add_trace(x = "Hillary", name = "Hillary", y = hillary_votes, marker = list(color = "#orange")) %>%
-      layout(title = "Popular Vote for Democratic Candidates",
+      layout(title = "Overall Popular Vote",
              xaxis = list(title = "Candidates"),
              yaxis = list(title = 'Popular vote', range=c(0, 16000000)))
     return (p)
@@ -77,7 +77,7 @@ shinyServer(function(input, output) {
   
   # chart #3
   output$plot3 <- renderPlotly({
-    filtered.df <- FilterByUserInput(dem_by_county, input$slider1, input$slider2, input$slider3)
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     bernie_by_state <- ByState2(filtered.df, "Bernie Sanders")
     hillary_by_state <- ByState2(filtered.df, "Hillary Clinton")
@@ -88,7 +88,7 @@ shinyServer(function(input, output) {
     p <- plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Bernie Sanders', 
             marker = list(color = "#orange", line = list(color = ifelse(dem_by_state$winner == "Bernie", "blue", "orange"), width = 3))) %>%
       add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
-      layout(title = "Primary Elections Democratic Party Votes Dispersion",
+      layout(title = "Vote Dispersion for each State",
              xaxis = list(title = "States"),
              yaxis = list(title = 'Votes', range=c(0, 3500000)), barmode = 'stack')
     return (p)
@@ -96,7 +96,7 @@ shinyServer(function(input, output) {
   
   #  chart 4
   output$plot4 <- renderPlotly({
-    filtered.df <- FilterByUserInput(dem_by_county, input$slider1, input$slider2, input$slider3)
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     bernie_by_state <- ByState2(filtered.df, "Bernie Sanders")
     hillary_by_state <- ByState2(filtered.df, "Hillary Clinton")
@@ -121,7 +121,7 @@ shinyServer(function(input, output) {
         colors = c('orange', 'blue')
       ) %>%
       layout(
-        title = 'Bernie Vs Hillary Map',
+        title = 'States Won Visualization Map',
         geo = g
       )
 
