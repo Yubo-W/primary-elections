@@ -16,7 +16,7 @@ final_data <- joined_data %>%
 colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                           'white', 'highschool', 'bachelors')
-View(final_data)
+# View(final_data)
 
 
 
@@ -29,7 +29,7 @@ trump_by_state <- ByState('Donald Trump')
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by="state") %>%
   mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
-View(dem_by_state)
+# View(dem_by_state)
 
 
 
@@ -80,16 +80,8 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 
 
 # Create data by county
-bernie_by_county <- final_data  %>% 
-  filter(candidate == 'Bernie Sanders') %>% 
-  group_by(county) %>% 
-  summarise(bernie_votes = sum(votes), abb = first(abb), black = mean(black), 
-            asian = mean(asian), hispanic = mean(hispanic), white = mean(white),
-            highschool = mean(highschool), bachelors = mean(bachelors))
-hillary_by_county <- final_data  %>% 
-  filter(candidate == 'Hillary Clinton') %>% 
-  group_by(county) %>% 
-  summarise(hillary_votes = sum(votes))
+bernie_by_county <- ByCounty('Bernie Sanders')
+hillary_by_county <- ByCounty('Hillary Clinton')
 dem_by_county <- left_join(bernie_by_county, hillary_by_county, by="county") %>%
   mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0)) %>%
