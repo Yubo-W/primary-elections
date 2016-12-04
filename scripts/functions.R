@@ -4,7 +4,7 @@ ByState <- function(person) {
     filter(candidate == person) %>% 
     group_by(state) %>% 
     summarize(votes = sum(votes), abb = first(abb), county = n())
-    colnames(temp)[colnames(temp) == "votes"] <- person
+    colnames(temp)[colnames(temp) == "votes"] <- gsub(" ", "_", person)
   return(temp)
 }
 

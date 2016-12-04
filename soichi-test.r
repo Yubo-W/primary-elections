@@ -34,13 +34,6 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
 
 
 #combining data by state
-ByState <- function(person) {
-  temp <- final_data %>% 
-          filter(candidate == person) %>% 
-          group_by(state) %>% 
-          summarize(votes = sum(votes), abb = first(abb), county = n())
-  return(temp)
-}
 
 bernie_by_state <- ByState("Bernie Sanders")
 hillary_by_state <- ByState("Hillary Clinton")
