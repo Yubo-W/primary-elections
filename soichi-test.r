@@ -53,9 +53,9 @@ rep_by_state <- left_join(trump_by_state, kasich_by_state, by="state") %>%
   left_join(., cruz_by_state, by="state") %>% 
   left_join(., carson_by_state, by="state") %>% 
   mutate(winner= ifelse(trump_by_state > kasich_by_state && 
-                        trump_by_state > rubio_by_state &&
-                        trump_by_state > cruz_by_state &&
-                        trump_by_state > carson_by_state,
+                          trump_by_state > rubio_by_state &&
+                          trump_by_state > cruz_by_state &&
+                          trump_by_state > carson_by_state,
                         "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
 
