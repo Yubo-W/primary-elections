@@ -36,11 +36,11 @@ shinyUI(navbarPage('Primary Election',
     br(),
     br(),
     br(),
-    plotlyOutput('plot2'),
+    plotlyOutput('plot1'),
     br(),
     br(),
     br(),
-    plotlyOutput('plot1')
+    plotlyOutput('plot2')
   )
                             ))
 ))

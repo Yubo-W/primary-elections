@@ -128,34 +128,25 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 
 ################################################################################################
 # Create data by county
-#select all information and filter by choosing any candidate
+#select all information except candidate and votes and filter by choosing any candidate
 join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
   select(-candidate, -votes)
-#change colname for joining
-colnames(bernie_by_county)[colnames(bernie_by_county) == "votes"] <- "bernie_votes"
 
-bernie_by_county <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
-  select(county = county, abb = abb, bernie_votes = votes)
-
-hillary_by_county <- final_data  %>% filter(candidate == 'Hillary Clinton') %>% 
-  select(county = county, abb = abb, hillary_votes = votes)
-
-# nrow(bernie_by_county)
-# nrow(hillary_by_county)
-# nrow(dem_by_county)
+bernie_by_county <- ByCounty("Bernie Sanders")
+hillary_by_county <- ByCounty("Hillary Clinton")
 
 #Join data
 dem_by_county <- left_join(join_with, bernie_by_county, by=c("abb", "county")) %>%
   left_join(., hillary_by_county, by=c("abb", "county")) %>% 
-  mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
+  mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
 nrow(dem_by_county) #2798/4205
-View(dem_by_county)
+# View(dem_by_county)
 
 # stats
 bernie_countys <- nrow(dem_by_county %>% filter(winner=="Bernie")) #1129counties
 hillary_countys <- nrow(dem_by_county %>% filter(winner=="Hillary")) #1669 counties
-bernie_votes <- sum(dem_by_county$bernie_votes)
-hillary_votes <- sum(dem_by_county$hillary_votes)
+bernie_votes <- sum(dem_by_county$Bernie_Sanders)
+hillary_votes <- sum(dem_by_county$Hillary_Clinton)
 
 #counties won bar chart
 plot_ly(x = "Bernie", name = "Bernie", y = bernie_countys, type = "bar", marker = list(color = "#blue")) %>%

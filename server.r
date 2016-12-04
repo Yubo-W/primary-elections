@@ -7,7 +7,7 @@ shinyServer(function(input, output) {
   
   primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
   county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
-  
+  source("./scripts/functions.R")
   
   #create final data frame
   joined_data <- left_join(primary, county, by="fips")
@@ -23,21 +23,18 @@ shinyServer(function(input, output) {
   
   
   # Create data by county
-  bernie_by_county <- final_data  %>% 
-    filter(candidate == 'Bernie Sanders') %>% 
-    group_by(county) %>% 
-    summarise(bernie_votes = sum(votes), abb = first(abb), black = mean(black), 
-              asian = mean(asian), hispanic = mean(hispanic), white = mean(white),
-              highschool = mean(highschool), bachelors = mean(bachelors), income = mean(income))
-  hillary_by_county <- final_data  %>% 
-    filter(candidate == 'Hillary Clinton') %>% 
-    group_by(county) %>% 
-    summarise(hillary_votes = sum(votes))
-  dem_by_county <- left_join(bernie_by_county, hillary_by_county, by="county") %>%
-    mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
-           z = ifelse(winner == "Bernie", 1, 0))  %>%
-           na.omit()
-  # View(dem_by_county)
+  #select all information except candidate and votes and filter by choosing any candidate
+  join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
+    select(-candidate, -votes)
+  
+  bernie_by_county <- ByCounty("Bernie Sanders")
+  hillary_by_county <- ByCounty("Hillary Clinton")
+  
+  #Join data
+  dem_by_county <- left_join(join_with, bernie_by_county, by=c("abb", "county")) %>%
+    left_join(., hillary_by_county, by=c("abb", "county")) %>% 
+    mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
+  nrow(dem_by_county)
   
   
   # bar plot1: democrat counties won
@@ -58,7 +55,7 @@ shinyServer(function(input, output) {
       add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#orange")) %>%
       layout(title = "Counties Won for Democratic Candidates",
              xaxis = list(title = "Candidates "),
-             yaxis = list(title = 'Counties won', range=c(0, 1000)))
+             yaxis = list(title = 'Counties won', range=c(0, 1800)))
     return (p)
   })
   
@@ -73,15 +70,16 @@ shinyServer(function(input, output) {
     # stats
     bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
     hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
-    bernie_votes <- sum(filtered.df$bernie_votes)
-    hillary_votes <- sum(filtered.df$hillary_votes)
+    bernie_votes <- sum(filtered.df$Bernie_Sanders)
+    hillary_votes <- sum(filtered.df$Hillary_Clinton)
+    print(bernie_votes)
     
     #county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = list(color = "#blue")) %>%
       add_trace(x = "Hillary", name = "Hillary", y = hillary_votes, marker = list(color = "#orange")) %>%
       layout(title = "Popular Vote for Democratic Candidates",
              xaxis = list(title = "Candidates "),
-             yaxis = list(title = 'Popular vote', range=c(0, 12000000)))
+             yaxis = list(title = 'Popular vote', range=c(0, 16000000)))
     return (p)
   })
   
