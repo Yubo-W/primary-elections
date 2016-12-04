@@ -21,15 +21,35 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
 
 
 #combining data by state
+ByState <- function(person) {
+  temp <- final_data %>% 
+          filter(candidate == person) %>% 
+          group_by(state) %>% 
+          summarize(votes = sum(votes), abb = first(abb), county = n())
+  return(temp)
+}
 
 bernie_by_state <- ByState("Bernie Sanders")
 hillary_by_state <- ByState("Hillary Clinton")
 trump_by_state <- ByState('Donald Trump')
+john_kasich <- ByState("John Kasich")
+marco_rubio <- ByState("Marco Rubio")
+ted_cruz <- ByState("Ted Cruz")
+ben_carson <- ByState("Ben Carson")
 
-dem_by_state <- left_join(bernie_by_state, hillary_by_state, by="state") %>%
+dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
   mutate(winner= ifelse(bernie_votes > hillary_votes, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
 # View(dem_by_state)
+
+rep_by_state <- left_join(trump_by_state, john_kasich, by="state") %>% 
+  left_join(., marco_rubio, by="state") %>% 
+  left_join(., ted_cruz, by="state") %>% 
+  left_join(., ben_carson, by="state") %>% 
+  mutate(winner= ifelse(trump_by_state > john_kasich && 
+                        trump_by_state > marco_rubio,
+                        "Bernie", "Hillary"),
+         z = ifelse(winner == "Bernie", 1, 0))
 
 
 
