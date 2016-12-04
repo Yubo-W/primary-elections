@@ -38,16 +38,44 @@ dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb",
          z = ifelse(winner == "Bernie", 1, 0))
 View(dem_by_state)
 
-rep_by_state <- left_join(trump_by_state, kasich_by_state, by="state") %>% 
-  left_join(., rubio_by_state, by="state") %>% 
-  left_join(., cruz_by_state, by="state") %>% 
-  left_join(., carson_by_state, by="state") %>% 
-  mutate(winner= ifelse(trump_by_state > kasich_by_state && 
-                          trump_by_state > rubio_by_state &&
-                          trump_by_state > cruz_by_state &&
-                          trump_by_state > carson_by_state,
-                        "Bernie", "Hillary"),
-         z = ifelse(winner == "Bernie", 1, 0))
+rep_by_state <- left_join(trump_by_state, kasich_by_state, by=c("state","abb","county")) %>% 
+  left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
+  left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
+  left_join(., carson_by_state, by=c("state","abb","county")) %>% 
+  mutate(if(trump_by_state > kasich_by_state && 
+            trump_by_state > rubio_by_state &&
+            trump_by_state > cruz_by_state &&
+            trump_by_state > carson_by_state) {
+            winner = "Trump"
+        } else if(kasich_by_state > trump_by_state && 
+                  kasich_by_state > rubio_by_state &&
+                  kasich_by_state > cruz_by_state &&
+                  kasich_by_state > carson_by_state) {
+                  winner = "Kasich"
+        } else if(rubio_by_state >  trump_by_state&& 
+                  rubio_by_state > kasich_by_state &&
+                  rubio_by_state > cruz_by_state &&
+                  rubio_by_state > carson_by_state) {
+                  winner = "Rubio"
+        } else if(cruz_by_state > trump_by_state &&
+                  cruz_by_state > kasich_by_state &&
+                  cruz_by_state > rubio_by_state &&
+                  cruz_by_state > carson_by_state) {
+                  winner = "Cruz"
+        } else {
+              winner = "Carson"
+        },
+        if(winner == "Trump") {
+            z = 0
+        } else if(winner == "Kasich") {
+            z = 1
+        } else if(winner == "Rubio") {
+            z = 2
+        } else if(winner == "Cruz") {
+            z = 3
+        } else {
+            z = 4
+        })
 
 
 
