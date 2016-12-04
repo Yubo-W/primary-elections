@@ -18,6 +18,7 @@ ByState2 <- function(filtered.df, person) {
   return(temp)
 }
 
+# Gets votes of Desired candidates by county.
 ByCounty <- function(final_data, person) {
   temp <- final_data %>% 
     filter(candidate == person) %>% 
