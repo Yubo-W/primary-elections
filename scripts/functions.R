@@ -27,8 +27,8 @@ ByCounty <- function(final_data, person) {
 }
 
 FilterByUserInput <- function(dem_by_county, input1, input2, input3) {
-  filtered.blacks <- dem_by_county %>% filter(black >= input1)
-  filtered.bachelors <- filtered.blacks %>% filter(bachelors >= input2)
-  filtered.income <- filtered.bachelors %>% filter(income >= input3)
+  filtered.blacks <- dem_by_county %>% filter(black >= head(input1, n=1) & black < tail(input1, n=1))
+  filtered.bachelors <- filtered.blacks %>% filter(bachelors >= head(input2, n=1) & bachelors < tail(input2, n=1))
+  filtered.income <- filtered.bachelors %>% filter(income >= head(input3, n=1) & income < tail(input3, n=1))
   return (filtered.income)
 }
