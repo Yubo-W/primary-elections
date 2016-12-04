@@ -41,41 +41,43 @@ View(dem_by_state)
 rep_by_state <- left_join(trump_by_state, kasich_by_state, by=c("state","abb","county")) %>% 
   left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
   left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
-  left_join(., carson_by_state, by=c("state","abb","county")) %>% 
-  mutate(if(trump_by_state > kasich_by_state && 
-            trump_by_state > rubio_by_state &&
-            trump_by_state > cruz_by_state &&
-            trump_by_state > carson_by_state) {
-            winner = "Trump"
-        } else if(kasich_by_state > trump_by_state && 
-                  kasich_by_state > rubio_by_state &&
-                  kasich_by_state > cruz_by_state &&
-                  kasich_by_state > carson_by_state) {
-                  winner = "Kasich"
-        } else if(rubio_by_state >  trump_by_state&& 
-                  rubio_by_state > kasich_by_state &&
-                  rubio_by_state > cruz_by_state &&
-                  rubio_by_state > carson_by_state) {
-                  winner = "Rubio"
-        } else if(cruz_by_state > trump_by_state &&
-                  cruz_by_state > kasich_by_state &&
-                  cruz_by_state > rubio_by_state &&
-                  cruz_by_state > carson_by_state) {
-                  winner = "Cruz"
-        } else {
-              winner = "Carson"
-        },
-        if(winner == "Trump") {
-            z = 0
-        } else if(winner == "Kasich") {
-            z = 1
-        } else if(winner == "Rubio") {
-            z = 2
-        } else if(winner == "Cruz") {
-            z = 3
-        } else {
-            z = 4
-        })
+  left_join(., carson_by_state, by=c("state","abb","county")) 
+rep_by_state[is.na(rep_by_state)] <- 0
+rep_by_state <- rep_by_state %>% 
+  mutate(if(Donald_Trump > John_Kasich && 
+            Donald_Trump > Marco_Rubio &&
+            Donald_Trump > Ted_Cruz &&
+            Donald_Trump > Ben_Carson) {
+    winner = "Trump"
+  } else if(John_Kasich > Donald_Trump && 
+            John_Kasich > Marco_Rubio &&
+            John_Kasich > Ted_Cruz &&
+            John_Kasich > Ben_Carson) {
+    winner = "Kasich"
+  } else if(Marco_Rubio > Donald_Trump && 
+            Marco_Rubio > John_Kasich &&
+            Marco_Rubio > Ted_Cruz &&
+            Marco_Rubio > Ben_Carson) {
+    winner = "Rubio"
+  } else if(Ted_Cruz > Donald_Trump &&
+            Ted_Cruz > John_Kasich &&
+            Ted_Cruz > Marco_Rubio &&
+            Ted_Cruz > Ben_Carson) {
+    winner = "Cruz"
+  } else {
+    winner = "Carson"
+  },
+  if(winner == "Trump") {
+    z = 0
+  } else if(winner == "Kasich") {
+    z = 1
+  } else if(winner == "Rubio") {
+    z = 2
+  } else if(winner == "Cruz") {
+    z = 3
+  } else {
+    z = 4
+  })
 
 
 
