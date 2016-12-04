@@ -11,13 +11,13 @@ source("./scripts/functions.R")
 
 #create final data frame
 joined_data <- left_join(primary, county, by="fips")
-final_data <- joined_data %>% na.omit() %>%
-              select(state, state_abbreviation.x, county, party, candidate, votes,
-                     SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
-                     RHI725214, RHI825214, EDU635213, EDU685213)
+final_data <- joined_data %>%
+  select(state, state_abbreviation.x, county, party, candidate, votes,
+         SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
+         RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
 colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
-                          'white', 'highschool', 'bachelors')
+                          'white', 'highschool', 'bachelors', 'income')
 # View(final_data)
 nrow(final_data) #17479 / 24611 (over 7000 missing)
 
