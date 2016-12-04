@@ -20,17 +20,6 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
                           'white', 'highschool', 'bachelors')
 # View(final_data)
 
-#testing
-# democrat <- final_data %>% filter(party == 'Democrat')
-# nrow(democrat)
-# bernie <- final_data %>% filter(candidate == 'Bernie Sanders')
-# nrow(bernie)
-# 
-# bernie2 <- final_data  %>%
-#   filter(candidate == 'Bernie Sanders') %>%
-#   group_by(county) %>%
-#   summarise(bernie_votes = sum(votes), abb = first(abb))
-# nrow(bernie2)
 
 
 #combining data by state
@@ -46,7 +35,7 @@ carson_by_state <- ByState("Ben Carson")
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
   mutate(winner= ifelse(Bernie Sanders > Hillary Clinton, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
-# View(dem_by_state)
+View(dem_by_state)
 
 rep_by_state <- left_join(trump_by_state, kasich_by_state, by="state") %>% 
   left_join(., rubio_by_state, by="state") %>% 
