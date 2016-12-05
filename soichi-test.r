@@ -42,28 +42,28 @@ rep_by_state <- left_join(trump_by_state, kasich_by_state, by=c("state","abb","c
   left_join(., carson_by_state, by=c("state","abb","county")) 
 rep_by_state[is.na(rep_by_state)] <- 0
 rep_by_state <- rep_by_state %>% 
-  mutate(if(Donald_Trump > John_Kasich && 
+  mutate(winner=if(Donald_Trump > John_Kasich && 
             Donald_Trump > Marco_Rubio &&
             Donald_Trump > Ted_Cruz &&
             Donald_Trump > Ben_Carson) {
-    winner = "Trump"
+    winner == "Trump"
   } else if(John_Kasich > Donald_Trump && 
             John_Kasich > Marco_Rubio &&
             John_Kasich > Ted_Cruz &&
             John_Kasich > Ben_Carson) {
-    winner = "Kasich"
+    winner == "Kasich"
   } else if(Marco_Rubio > Donald_Trump && 
             Marco_Rubio > John_Kasich &&
             Marco_Rubio > Ted_Cruz &&
             Marco_Rubio > Ben_Carson) {
-    winner = "Rubio"
+    winner == "Rubio"
   } else if(Ted_Cruz > Donald_Trump &&
             Ted_Cruz > John_Kasich &&
             Ted_Cruz > Marco_Rubio &&
             Ted_Cruz > Ben_Carson) {
-    winner = "Cruz"
+    winner == "Cruz"
   } else {
-    winner = "Carson"
+    winner == "Carson"
   },
   if(winner == "Trump") {
     z = 0
