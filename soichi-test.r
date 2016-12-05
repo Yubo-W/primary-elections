@@ -125,7 +125,6 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 
 
 
-################################################################################################
 # Create data by county
 #select all information except candidate and votes and filter by choosing any candidate
 join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
@@ -162,7 +161,6 @@ plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = 
          yaxis = list(title = 'Popular Vote', range=c(0, 16000000)))
 
 
-################################################################################################
 # Now group by state2
 test <- ByState2(dem_by_county, "Bernie Sanders")
 View(test)
