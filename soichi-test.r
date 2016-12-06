@@ -43,39 +43,41 @@ rubio_by_state <- ByState(final_data, "Marco Rubio")
 cruz_by_state <- ByState(final_data, "Ted Cruz")
 carson_by_state <- ByState(final_data, "Ben Carson")
 
+#democratic data by state
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
   mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
          z = ifelse(winner == "Bernie", 1, 0))
 View(dem_by_state)
 
+#republican data by state
 rep_by_state <- left_join(trump_by_state, kasich_by_state, by=c("state","abb","county")) %>% 
   left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
   left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
   left_join(., carson_by_state, by=c("state","abb","county")) 
 rep_by_state[is.na(rep_by_state)] <- 0
 rep_by_state <- rep_by_state %>% 
-  mutate(winner=if(Donald_Trump > John_Kasich && 
+  mutate(if(Donald_Trump > John_Kasich && 
             Donald_Trump > Marco_Rubio &&
             Donald_Trump > Ted_Cruz &&
             Donald_Trump > Ben_Carson) {
-    winner == "Trump"
+    winner = "Trump"
   } else if(John_Kasich > Donald_Trump && 
             John_Kasich > Marco_Rubio &&
             John_Kasich > Ted_Cruz &&
             John_Kasich > Ben_Carson) {
-    winner == "Kasich"
+    winner = "Kasich"
   } else if(Marco_Rubio > Donald_Trump && 
             Marco_Rubio > John_Kasich &&
             Marco_Rubio > Ted_Cruz &&
             Marco_Rubio > Ben_Carson) {
-    winner == "Rubio"
+    winner = "Rubio"
   } else if(Ted_Cruz > Donald_Trump &&
             Ted_Cruz > John_Kasich &&
             Ted_Cruz > Marco_Rubio &&
             Ted_Cruz > Ben_Carson) {
-    winner == "Cruz"
+    winner = "Cruz"
   } else {
-    winner == "Carson"
+    winner = "Carson"
   },
   if(winner == "Trump") {
     z = 0
@@ -88,7 +90,10 @@ rep_by_state <- rep_by_state %>%
   } else {
     z = 4
   })
-
+colnames(rep_by_state) <- c('state', 'Donald_Trump', 'abb', 'county',
+                          'John_Kasich', 'Marco_Rubio', 'Ted_Cruz', 'Ben_Carson',
+                          'winner', 'z')
+View(rep_by_state)
 
 
 
@@ -102,7 +107,7 @@ sum(dem_by_state$bernie_votes) #11959102 votes
 sum(dem_by_state$hillary_votes) #15692452 votes
 
 
-#bar chart
+#democratic bar chart
 plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Bernie Sanders', 
         marker = list(color = "#orange", line = list(color = ifelse(dem_by_state$winner == "Bernie", "blue", "orange"), width = 3))) %>%
   add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
@@ -111,8 +116,19 @@ plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Berni
          yaxis = list(title = 'Votes', range=c(0, 3500000)), barmode = 'stack')
 
 
+#republican bar chart
+plot_ly(rep_by_state, x = ~abb, y = ~Donald_Trump, type = 'bar', name = 'Donald Trump', 
+        marker = list(color = "#red", line = list(color = "#red", width = 3))) %>%
+  add_trace(y = ~John_Kasich, name = 'John Kasich', marker = list(color = "#green")) %>%
+  add_trace(y = ~Marco_Rubio, name = 'Marco Rubio', marker = list(color = "#yellow")) %>%
+  add_trace(y = ~Ted_Cruz, name = 'Ted Cruz', marker = list(color = "#purple")) %>%
+  add_trace(y = ~Ben_Carson, name = 'Ben Carson', marker = list(color = "#cyan")) %>%
+  layout(title = "Primary Elections Republican Party Votes Dispersion",
+         xaxis = list(title = "States"),
+         yaxis = list(title = 'Votes', range=c(0, 3000000)), barmode = 'stack')
 
-#choropleth map
+
+#democratic choropleth map
 l <- list(color = toRGB("white"), width = 2)
 # specify some map projection/options
 g <- list(
