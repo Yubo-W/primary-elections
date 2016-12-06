@@ -7,6 +7,7 @@ shinyUI(navbarPage('Primary Election',
                             h3('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hsu'),
                             br(),
                             br(),
+                            p("This project contains data on the 2016 presidential primary. The data comes from an online source that is cited in the GitHub repository."),
                             br(),
                             br(),
                             # Create sidebar layout

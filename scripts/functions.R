@@ -1,14 +1,5 @@
-# Gets votes of desired candidate by state.
-ByState <- function(final_data, person) {
-  temp <- final_data %>% 
-    filter(candidate == person) %>% 
-    group_by(state) %>% 
-    summarize(votes = sum(votes), abb = first(abb), county = n())
-  colnames(temp)[colnames(temp) == "votes"] <- gsub(" ", "_", person)
-  return(temp)
-}
-
-ByState2 <- function(filtered.df, person) {
+# Gets votes of desired candidate by state by the filtered data.
+ByState <- function(filtered.df, person) {
   temp.name <- gsub(" ", "_", person)
   colnames(filtered.df)[colnames(filtered.df) == temp.name] <- 'votes'
   temp <- filtered.df %>%
