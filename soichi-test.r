@@ -153,6 +153,31 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 
 
 
+#republican choropleth map
+l <- list(color = toRGB("white"), width = 2)
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+plot_geo(rep_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
+  add_trace(
+    z = ~z,
+    text = ~winner,
+    locations = ~abb,
+    color = ~z,
+    colors = c('red')
+  ) %>%
+  layout(
+    title = 'Republican Primary Map',
+    geo = g
+  )
+
+
+
 # Create data by county
 #select all information except candidate and votes and filter by choosing any candidate
 join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
