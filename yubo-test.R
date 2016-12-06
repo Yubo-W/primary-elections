@@ -10,7 +10,8 @@ SortData <- function(results, facts) {
   new_county_names <- new.county %>% 
     collect() %>% 
     .$area_name %>% 
-    gsub(" County", "", .)
+    gsub(" County", "", .) %>% 
+    tolower()
   
   new.county <- new.county %>% 
                 select(-area_name)
@@ -20,6 +21,7 @@ SortData <- function(results, facts) {
 }
 
 new.data <- SortData(data, county.facts)
+data$county <- tolower(data$county)
 join_new_data <- left_join(data, new.data, by=c("county", "state_abbreviation"))
 
 final_data_yubo <- join_new_data %>%  na.omit() %>%
