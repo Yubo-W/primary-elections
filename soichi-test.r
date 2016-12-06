@@ -29,7 +29,7 @@ colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes
 #     Kansas: votes by district
 #     Maine: manual sorting
 #     Minnesota: missing data
-#     New Hampshire: missing fips, manual sorting
+#     - New Hampshire: missing fips, manual sorting
 #     Rhode Island: manual sorting
 #     Vermont: manual sorting
 #     Alaska: They don't conduct presidential primarys

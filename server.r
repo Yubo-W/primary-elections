@@ -10,9 +10,11 @@ shinyServer(function(input, output) {
   source("./scripts/functions.R")
   
   #create final data frame
-  joined_data <- left_join(primary, county, by="fips")
-  final_data <- joined_data %>%
-    select(state, state_abbreviation.x, county, party, candidate, votes,
+  new.county <- SortData(county)
+  primary$county <- tolower(primary$county)
+  joined_data <- left_join(primary, new.county, by=c("county", "state_abbreviation"))
+  final_data <- joined_data %>% na.omit() %>% 
+    select(state, state_abbreviation, county, party, candidate, votes,
            SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
            RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
   colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
@@ -79,8 +81,8 @@ shinyServer(function(input, output) {
   output$plot3 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
-    bernie_by_state <- ByState2(filtered.df, "Bernie Sanders")
-    hillary_by_state <- ByState2(filtered.df, "Hillary Clinton")
+    bernie_by_state <- ByState(filtered.df, "Bernie Sanders")
+    hillary_by_state <- ByState(filtered.df, "Hillary Clinton")
     dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
       mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
              z = ifelse(winner == "Bernie", 1, 0))
@@ -98,8 +100,8 @@ shinyServer(function(input, output) {
   output$plot4 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
-    bernie_by_state <- ByState2(filtered.df, "Bernie Sanders")
-    hillary_by_state <- ByState2(filtered.df, "Hillary Clinton")
+    bernie_by_state <- ByState(filtered.df, "Bernie Sanders")
+    hillary_by_state <- ByState(filtered.df, "Hillary Clinton")
     dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
       mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
              z = ifelse(winner == "Bernie", 1, 0))

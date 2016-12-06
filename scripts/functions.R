@@ -31,7 +31,7 @@ FilterByUserInput <- function(dem_by_county, race1, race2, race3, race4, educati
 }
 
 # Modifies the county facts data so the column area_name is county.
-SortData <- function(results, facts) {
+SortData <- function(facts) {
   new.county <- facts %>% 
     filter(state_abbreviation != "")
   
