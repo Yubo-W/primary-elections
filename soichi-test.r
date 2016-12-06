@@ -23,16 +23,16 @@ nrow(final_data) #17479 / 24611 (over 7000 missing)
 
 ## We won't have Alaska's data because Alaska does not participate in the primary elections.
 ## Missing states (not including alaska):
-#     North Dakota
-#     Massachussetts
-#     Connecticut
-#     Kansas
-#     Maine
-#     Minnesota
-#     New Hampshire
-#     Rhode Island
-#     Vermont
-#     Alaska
+#     North Dakota: votes by district
+#     Massachussetts: manual sorting
+#     Connecticut: manual sorting
+#     Kansas: votes by district
+#     Maine: manual sorting
+#     Minnesota: missing data
+#     New Hampshire: missing fips, manual sorting
+#     Rhode Island: manual sorting
+#     Vermont: manual sorting
+#     Alaska: They don't conduct presidential primarys
 
 #combining data by state
 bernie_by_state <- ByState(final_data, "Bernie Sanders")
