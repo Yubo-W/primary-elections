@@ -38,3 +38,21 @@ FilterByUserInput <- function(dem_by_county, race1, race2, race3, race4, educati
   filtered.income <- filtered.bachelors %>% filter(income >= head(income1, n=1) & income < tail(income1, n=1))
   return (filtered.income)
 }
+
+# Modifies the county facts data so the column area_name is county.
+SortData <- function(results, facts) {
+  new.county <- facts %>% 
+    filter(state_abbreviation != "")
+  
+  new_county_names <- new.county %>% 
+    collect() %>% 
+    .$area_name %>% 
+    gsub(" County", "", .) %>% 
+    tolower()
+  
+  new.county <- new.county %>% 
+    select(-area_name)
+  
+  new.county$county <- new_county_names
+  return(new.county)
+}
