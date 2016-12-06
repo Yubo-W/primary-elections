@@ -15,8 +15,9 @@ SortData <- function(results, facts) {
   new.county <- new.county %>% 
                 select(-area_name)
   
-  new.county$area_name <- new_county_names
+  new.county$county <- new_county_names
   return(new.county)
 }
 
 new.data <- SortData(data, county.facts)
+join_new_data <- left_join(data, new.data, by="county")
