@@ -1,7 +1,7 @@
 library(plotly)
 
 
-shinyUI(navbarPage('Primary Election',
+shinyUI(fluidPage(navbarPage('Primary Election',
                    tabPanel('Democratic',
                             titlePanel('Primary Election Democratic Party Statistics'),
                             h3('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hsu'),
@@ -40,12 +40,16 @@ shinyUI(navbarPage('Primary Election',
                               
   mainPanel(
     br(),
-    br(),
-    plotlyOutput('plot1'),
-    br(),
+    h2("Data Visualization"),
     br(),
     br(),
-    plotlyOutput('plot2'),
+    br(),
+    br(),
+    fluidRow(
+      splitLayout(cellWidths = c("50%", "50%"), plotlyOutput("plot1"), plotlyOutput("plot2"))
+    ),
+    br(),
+    br(),
     br(),
     br(),
     br(),
@@ -55,5 +59,6 @@ shinyUI(navbarPage('Primary Election',
     br(),
     plotlyOutput('plot4')
   )
+)
 ))
 ))
