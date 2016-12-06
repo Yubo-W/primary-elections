@@ -31,4 +31,3 @@ final_data_yubo <- join_new_data %>%  na.omit() %>%
 colnames(final_data_yubo) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                           'white', 'highschool', 'bachelors', 'income')
-#test
