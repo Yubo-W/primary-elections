@@ -26,7 +26,7 @@ final_data_yubo <- join_new_data %>%  na.omit() %>%
   select(state, state_abbreviation, county, party, candidate, votes,
          SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
          RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
-colnames(final_data_yubo) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
+colnames(test2) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                           'white', 'highschool', 'bachelors', 'income')
 #test
