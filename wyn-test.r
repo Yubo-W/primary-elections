@@ -112,15 +112,3 @@ plot_ly(df, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
                   font = list(family = 'Arial', size = 12,
                               color = 'rgb(248, 248, 255)'),
                   showarrow = FALSE)
-
-
-new.data <- SortData(data, county.facts)
-join_new_data <- left_join(data, new.data, by=c("county", "state_abbreviation"))
-
-final_data_yubo <- join_new_data %>%  na.omit() %>%
-  select(state, state_abbreviation, county, party, candidate, votes,
-         SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
-         RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
-colnames(final_data_yubo) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
-                               'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
-                               'white', 'highschool', 'bachelors', 'income')
