@@ -4,7 +4,7 @@ library(plotly)
 shinyUI(navbarPage('Primary Election',
                    tabPanel('Democratic',
                             titlePanel('Primary Election Democratic Party Statistics'),
-                            h3('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hu'),
+                            h3('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hsu'),
                             br(),
                             br(),
                             br(),
