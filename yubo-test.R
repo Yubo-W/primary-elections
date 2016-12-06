@@ -21,3 +21,11 @@ SortData <- function(results, facts) {
 
 new.data <- SortData(data, county.facts)
 join_new_data <- left_join(data, new.data, by="county")
+
+final_data_yubo <- join_new_data %>%  na.omit() %>%
+  select(state, state_abbreviation.x, county, party, candidate, votes,
+         SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
+         RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
+colnames(final_data_yubo) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
+                          'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
+                          'white', 'highschool', 'bachelors', 'income')
