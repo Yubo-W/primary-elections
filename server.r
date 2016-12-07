@@ -1,15 +1,17 @@
+# library the required packages.
 library(dplyr)
 library(plotly)
 
 
-# read in data
+# Shiny server
 shinyServer(function(input, output) {
   
+  # Reading in data files.
   primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
   county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
   source("./scripts/functions.R")
   
-  #create final data frame
+  # Creating the finalized data frame, joining the county and voting data together.
   new.county <- SortData(county)
   primary$county <- tolower(primary$county)
   joined_data <- left_join(primary, new.county, by=c("county", "state_abbreviation"))
@@ -49,6 +51,7 @@ shinyServer(function(input, output) {
                              'white', 'highschool', 'bachelors', 'income')
   #############################################################
 
+  # Making the final data, joining previous final data with manually created dataframe for NH and LA.
   final_data <- rbind(final_data, joined_data)
     
   # Create data by county
@@ -65,7 +68,6 @@ shinyServer(function(input, output) {
     mutate(winner = ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
   nrow(dem_by_county)
   
-  
   # bar plot1: democrat counties won
   output$plot1 <- renderPlotly({
     #filter based on user input
@@ -75,7 +77,6 @@ shinyServer(function(input, output) {
     bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
     hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
 
-    
     #county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#FF7F0E")) %>%
       add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#1F77B4")) %>%
@@ -188,4 +189,3 @@ shinyServer(function(input, output) {
     return (p)
   })
 })
-  
