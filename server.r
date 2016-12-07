@@ -103,6 +103,38 @@ shinyServer(function(input, output) {
     return (p)
   })
   
+  # pie chart 1
+  output$plot5 <- renderPlotly({
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
+    
+    bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
+    hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
+    
+    names <- c("Bernie Sanders", "Hillary Clinton")
+    county_percent <- c(bernie_counties, hillary_counties)
+    
+    plot_ly(labels = names, values = county_percent, type = 'pie') %>%
+      layout(title = 'Percentage of Counties Won',
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  })
+  
+  # pie chart 2
+  output$plot6 <- renderPlotly({
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
+    
+    bernie_votes <- sum(filtered.df$Bernie_Sanders)
+    hillary_votes <- sum(filtered.df$Hillary_Clinton)
+    
+    names <- c("Bernie Sanders", "Hillary Clinton")
+    votes_percent <- c(bernie_votes, hillary_votes)
+    
+    plot_ly(labels = names, values = votes_percent, type = 'pie') %>%
+      layout(title = 'Percentage of Overall Popular Vote',
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  })
+  
   
   # chart #3
   output$plot3 <- renderPlotly({
