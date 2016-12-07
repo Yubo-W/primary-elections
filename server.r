@@ -307,35 +307,6 @@ shinyServer(function(input, output) {
       layout(title = "Overall Popular Vote",
              yaxis = list(title = 'Counties won', range=c(0, 16000000)))
     return (p)
-    
-    # pie chart 1
-    output$rep_plot3 <- renderPlotly({
-      filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3, input$rep_race4,
-                                       input$rep_education1, input$rep_education2, input$rep_income1)
-      
-      # stats
-      ben_counties <- nrow(filtered.df %>% filter(winner=="Ben_Carson"))
-      donald_counties <- nrow(filtered.df %>% filter(winner=="Donald_Trump"))
-      john_counties <- nrow(filtered.df %>% filter(winner=="John_Kasich"))
-      marco_counties <- nrow(filtered.df %>% filter(winner=="Marco_Rubio"))
-      ted_counties <- nrow(filtered.df %>% filter(winner=="Ted_Cruz"))
-      carly_counties <- nrow(filtered.df %>% filter(winner=="Carly_Fiorina"))
-      chris_counties <- nrow(filtered.df %>% filter(winner=="Chris_Christie"))
-      jeb_counties <- nrow(filtered.df %>% filter(winner=="Jeb_Bush"))
-      mike_counties <- nrow(filtered.df %>% filter(winner=="Mike_Huckabee"))
-      rand_counties <- nrow(filtered.df %>% filter(winner=="Rand_Paul"))
-      rick_counties <- nrow(filtered.df %>% filter(winner=="Rick_Santorum"))
-      
-      rep_names <- c("Ben Carson", "Donald Trump", "John Kasich", "Marco Rubio", "Ted Cruz", "Carly Fiorina",
-                 "Chris Christie", "Jeb Bush", "Mike Huckabee", "Rand Paul", "Rick Santorum")
-      rep_county_percent <- c(ben_counties, donald_counties, john_counties, marco_counties, ted_counties, carly_counties,
-                          chris_counties, jeb_counties, mike_counties, rand_counties, rick_counties)
-      
-      plot_ly(labels = rep_names, values = rep_county_percent, type = 'pie') %>%
-        layout(title = 'Percentage of Counties Won',
-               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-    })
   })
   
   

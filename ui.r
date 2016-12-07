@@ -123,10 +123,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                           splitLayout(cellWidths = c("50%", "50%"), plotlyOutput("rep_plot1"), plotlyOutput("rep_plot2"))
                                         ),
                                         br(),
-                                        br(),
-                                        fluidRow(
-                                          splitLayout(cellWidths = c("50%", "50%"), plotlyOutput("rep_plot3"))
-                                        )
+                                        br()
                                       )
                                     )
                                   )
