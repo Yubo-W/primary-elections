@@ -77,8 +77,8 @@ shinyServer(function(input, output) {
 
     
     #county bar chart
-    p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#blue")) %>%
-      add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#orange")) %>%
+    p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#FF7F0E")) %>%
+      add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#1F77B4")) %>%
       layout(title = "Number of Counties Won",
              xaxis = list(title = "Candidates "),
              yaxis = list(title = 'Counties won', range=c(0, 1800)))
@@ -95,8 +95,8 @@ shinyServer(function(input, output) {
     hillary_votes <- sum(filtered.df$Hillary_Clinton)
     
     #county bar chart
-    p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = list(color = "#blue")) %>%
-      add_trace(x = "Hillary", name = "Hillary", y = hillary_votes, marker = list(color = "#orange")) %>%
+    p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_votes, type = "bar", marker = list(color = "#FF7F0E")) %>%
+      add_trace(x = "Hillary", name = "Hillary", y = hillary_votes, marker = list(color = "#1F77B4")) %>%
       layout(title = "Overall Popular Vote",
              xaxis = list(title = "Candidates"),
              yaxis = list(title = 'Popular vote', range=c(0, 16000000)))
@@ -104,7 +104,7 @@ shinyServer(function(input, output) {
   })
   
   # pie chart 1
-  output$plot5 <- renderPlotly({
+  output$plot3 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
@@ -120,7 +120,7 @@ shinyServer(function(input, output) {
   })
   
   # pie chart 2
-  output$plot6 <- renderPlotly({
+  output$plot4 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     bernie_votes <- sum(filtered.df$Bernie_Sanders)
@@ -136,8 +136,8 @@ shinyServer(function(input, output) {
   })
   
   
-  # chart #3
-  output$plot3 <- renderPlotly({
+  # By State Stacked Bar chart
+  output$plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     bernie_by_state <- ByState(filtered.df, "Bernie Sanders")
@@ -147,16 +147,16 @@ shinyServer(function(input, output) {
              z = ifelse(winner == "Bernie", 1, 0))
     
     p <- plot_ly(dem_by_state, x = ~abb, y = ~Bernie_Sanders, type = 'bar', name = 'Bernie Sanders', 
-            marker = list(color = "#orange", line = list(color = ifelse(dem_by_state$winner == "Bernie", "blue", "orange"), width = 3))) %>%
-      add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#blue")) %>%
+            marker = list(color = "#FF7F0E", line = list(color = ifelse(dem_by_state$winner == "Bernie", "orange", "blue"), width = 3))) %>%
+      add_trace(y = ~Hillary_Clinton, name = 'Hillary Clinton', marker = list(color = "#1F77B4")) %>%
       layout(title = "Vote Dispersion for each State",
              xaxis = list(title = "States"),
              yaxis = list(title = 'Votes', range=c(0, 3500000)), barmode = 'stack')
     return (p)
   })
   
-  #  chart 4
-  output$plot4 <- renderPlotly({
+  # By State Map
+  output$plot6 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     bernie_by_state <- ByState(filtered.df, "Bernie Sanders")
@@ -179,7 +179,7 @@ shinyServer(function(input, output) {
         text = ~winner,
         locations = ~abb,
         color = ~z,
-        colors = c('orange', 'blue')
+        colors = c('#1F77B4', '#FF7F0E')
       ) %>%
       layout(
         title = 'States Won Visualization Map',
