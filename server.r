@@ -153,10 +153,7 @@ shinyServer(function(input, output) {
         title = 'States Won Visualization Map',
         geo = g
       )
-
     return (p)
   })
-  
-  
 })
   
