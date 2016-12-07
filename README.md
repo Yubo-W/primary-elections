@@ -4,7 +4,7 @@
 
 The project is a web application built using Shiny, and is deployed to the Shiny servers and can be accessed by clicking the "Final Project" below:
 
-Final Project  
+[Final Project](https://soichi.shinyapps.io/final-project-I-mWithHer/)  
 Source of data: https://www.kaggle.com/benhamner/2016-us-election
 <br>
 
