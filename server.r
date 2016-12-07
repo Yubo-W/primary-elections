@@ -68,6 +68,11 @@ shinyServer(function(input, output) {
     mutate(winner = ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
   nrow(dem_by_county)
   
+  # 
+
+  #############################################################
+  # Democratic Party plots.
+  
   # bar plot1: democrat counties won
   output$plot1 <- renderPlotly({
     #filter based on user input
@@ -188,4 +193,94 @@ shinyServer(function(input, output) {
       )
     return (p)
   })
+  #############################################################
+  
+  #############################################################
+  # Republican by County data.
+  
+  carson <- ByCounty(final_data, "Ben Carson")
+  trump <- ByCounty(final_data, "Donald Trump")
+  kasich <- ByCounty(final_data, "John Kasich")
+  rubio <- ByCounty(final_data, "Marco Rubio")
+  cruz <- ByCounty(final_data, "Ted Cruz")
+  fiorina <- ByCounty(final_data, "Carly Fiorina")
+  christie <- ByCounty(final_data, "Chris Christie")
+  bush <- ByCounty(final_data, "Jeb Bush")
+  huckabee <- ByCounty(final_data, "Mike Huckabee")
+  paul <- ByCounty(final_data, "Rand Paul")
+  santorum <- ByCounty(final_data, "Rick Santorum")
+  
+  rep_join <- left_join(test_rep, trump, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, carson, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, kasich, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, rubio, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, cruz, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, fiorina, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, christie, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, bush, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, huckabee, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, paul, by = c("county", "abb"))
+  rep_join <- left_join(rep_join, santorum, by = c("county", "abb"))
+  
+  rep_by_county <- rep_join %>% unique() %>% mutate(row = seq(1:nrow(.)))
+  rep_by_county[is.na(rep_by_county)] <- 0
+  
+  rep_winners <- rep_by_county %>% 
+    select(-state, -female, -county, -abb, -party, -black, -indian, -asian, -hawaiian, -multi, -hispanic,
+           -white, -highschool, -bachelors, -income) %>% 
+    mutate(row = seq(1:nrow(.)))
+  
+  rep_winners$row <- seq(1:nrow(rep_winners))
+  
+  winner <- as.data.frame(cbind(row.names(rep_winners),apply(rep_winners,1,function(x)
+    names(rep_winners)[which(x==max(x))])))
+  winner$row <- seq(1:nrow(winner))
+  
+  rep_by_county <- left_join(rep_by_county, winner, by = "row")
+  names(rep_by_county)[names(rep_by_county) == "V1"] <- "remove"
+  names(rep_by_county)[names(rep_by_county) == "V2"] <- "winner"
+  rep_by_county <- rep_by_county %>% 
+    select(-remove)
+  
+  # Republican Party plots.
+  
+  # bar plot1: democrat counties won
+  output$rep_plot1 <- renderPlotly({
+    #filter based on user input
+    filtered.df <- FilterByUserInput(dem_by_county, input$rep_race1, input$rep_race2, input$rep_race3, input$rep_race4,
+                                     input$rep_education1, input$rep_education2, input$rep_income1)
+    
+    # stats
+    ben_counties <- nrow(filtered.df %>% filter(winner=="Ben"))
+    donald_counties <- nrow(filtered.df %>% filter(winner=="Donald"))
+    john_counties <- nrow(filtered.df %>% filter(winner=="John"))
+    marco_counties <- nrow(filtered.df %>% filter(winner=="Marco"))
+    ted_counties <- nrow(filtered.df %>% filter(winner=="Ted"))
+    carly_counties <- nrow(filtered.df %>% filter(winner=="Carly"))
+    chris_counties <- nrow(filtered.df %>% filter(winner=="Chris"))
+    jeb_counties <- nrow(filtered.df %>% filter(winner=="Jeb"))
+    mike_counties <- nrow(filtered.df %>% filter(winner=="Mike"))
+    rand_counties <- nrow(filtered.df %>% filter(winner=="Rand"))
+    rick_counties <- nrow(filtered.df %>% filter(winner=="Rick"))
+    
+    #county bar chart
+    p <- plot_ly(x = "Ben", name = "Ben", y = ben_counties, type = "bar", marker = list(color = "#FF7F0E")) %>%
+      add_trace(x = "Donald", name = "Donald", y = donald_counties, marker = list(color = "#1F77B4")) %>%
+      add_trace(x = "John", name = "John", y = john_counties, marker = list(color = "#1F77B4")) %>%
+      layout(title = "Number of Counties Won",
+             xaxis = list(title = "Candidates "),
+             yaxis = list(title = 'Counties won', range=c(0, 1800)))
+    return (p)
+  })
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  #############################################################
 })
