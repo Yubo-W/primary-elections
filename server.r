@@ -188,6 +188,7 @@ shinyServer(function(input, output) {
     return (p)
   })
 
+  ######################################################################################
   # Republican by County data.
   mod_rep <- final_data %>% filter(party == "Republican") %>% select(-candidate, -votes)
   
@@ -234,6 +235,7 @@ shinyServer(function(input, output) {
   names(rep_by_county)[names(rep_by_county) == "V2"] <- "winner"
   rep_by_county <- rep_by_county %>% 
     select(-remove)
+  ######################################################################################
   
   # Republican Party plots.
   
@@ -307,6 +309,67 @@ shinyServer(function(input, output) {
       layout(title = "Overall Popular Vote",
              yaxis = list(title = 'Counties won', range=c(0, 16000000)))
     return (p)
+  })
+  
+  # Republican pie chart 1
+  output$rep_plot3 <- renderPlotly({
+    filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3,
+                                     input$rep_race4, input$rep_education1, input$rep_education2, input$rep_income1)
+    
+    ben_counties <- nrow(filtered.df %>% filter(winner=="Ben_Carson"))
+    donald_counties <- nrow(filtered.df %>% filter(winner=="Donald_Trump"))
+    john_counties <- nrow(filtered.df %>% filter(winner=="John_Kasich"))
+    marco_counties <- nrow(filtered.df %>% filter(winner=="Marco_Rubio"))
+    ted_counties <- nrow(filtered.df %>% filter(winner=="Ted_Cruz"))
+    carly_counties <- nrow(filtered.df %>% filter(winner=="Carly_Fiorina"))
+    chris_counties <- nrow(filtered.df %>% filter(winner=="Chris_Christie"))
+    jeb_counties <- nrow(filtered.df %>% filter(winner=="Jeb_Bush"))
+    mike_counties <- nrow(filtered.df %>% filter(winner=="Mike_Huckabee"))
+    rand_counties <- nrow(filtered.df %>% filter(winner=="Rand_Paul"))
+    rick_counties <- nrow(filtered.df %>% filter(winner=="Rick_Santorum"))
+    
+    names <- c("Ben Carson", "Donald Trump", "John Kasich", "Marco Rubio", "Ted Cruz",
+               "Carly Fiorina", "Chris Christie", "Jeb Bush", "Mike Huckabee", "Rand Paul",
+               "Rick Santorum")
+    county_percent <- c(ben_counties, donald_counties, john_counties, marco_counties,
+                        ted_counties, carly_counties, chris_counties, jeb_counties, mike_counties,
+                        rand_counties, rick_counties)
+    
+    plot_ly(labels = names, values = county_percent, type = 'pie') %>%
+      layout(title = 'Percentage of Counties Won',
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  })
+  
+  # Republican pie chart 2
+  output$rep_plot4 <- renderPlotly({
+    filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3,
+                                     input$rep_race4, input$rep_education1, input$rep_education2, input$rep_income1)
+    
+    # stats
+    carson_votes <- sum(filtered.df$Ben_Carson)
+    trump_votes <- sum(filtered.df$Donald_Trump)
+    kasich_votes <- sum(filtered.df$John_Kasich)
+    rubio_votes <- sum(filtered.df$Marco_Rubio)
+    cruz_votes <- sum(filtered.df$Ted_Cruz)
+    fiorina_votes <- sum(filtered.df$Carly_Fiorina)
+    christie_votes <- sum(filtered.df$Chris_Christie)
+    bush_votes <- sum(filtered.df$Jeb_Bush)
+    huckabee_votes <- sum(filtered.df$Mike_Huckabee)
+    paul_votes <- sum(filtered.df$Rand_Paul)
+    santorum_votes <- sum(filtered.df$Rick_Santorum)
+    
+    names <- c("Ben Carson", "Donald Trump", "John Kasich", "Marco Rubio", "Ted Cruz",
+               "Carly Fiorina", "Chris Christie", "Jeb Bush", "Mike Huckabee", "Rand Paul",
+               "Rick Santorum")
+    county_percent <- c(carson_votes, trump_votes, kasich_votes, rubio_votes,
+                        cruz_votes, fiorina_votes, christie_votes, bush_votes, huckabee_votes,
+                        paul_votes, santorum_votes)
+    
+    plot_ly(labels = names, values = county_percent, type = 'pie') %>%
+      layout(title = 'Percentage of Overall Popular Vote',
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
   

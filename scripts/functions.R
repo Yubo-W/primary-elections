@@ -18,8 +18,8 @@ ByCounty <- function(final_data, person) {
     return(temp)
 }
 
-FilterByUserInput <- function(dem_by_county, race1, race2, race3, race4, education1, education2, income1) {
-  filtered.blacks <- dem_by_county %>% filter(black >= head(race1, n=1) & black < tail(race1, n=1))
+FilterByUserInput <- function(df, race1, race2, race3, race4, education1, education2, income1) {
+  filtered.blacks <- df %>% filter(black >= head(race1, n=1) & black < tail(race1, n=1))
   filtered.whites <- filtered.blacks %>% filter(white >= head(race2, n=1) & white < tail(race2, n=1))
   filtered.asians <- filtered.whites %>% filter(asian >= head(race3, n=1) & asian < tail(race3, n=1))
   filtered.hispanics <- filtered.asians %>% filter(hispanic >= head(race4, n=1) & hispanic < tail(race4, n=1))
