@@ -112,3 +112,19 @@ plot_ly(df, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
                   font = list(family = 'Arial', size = 12,
                               color = 'rgb(248, 248, 255)'),
                   showarrow = FALSE)
+
+
+
+filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
+
+# stats
+bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
+hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
+
+
+#county bar chart
+p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#blue")) %>%
+  add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#orange")) %>%
+  layout(title = "Number of Counties Won",
+         xaxis = list(title = "Candidates "),
+         yaxis = list(title = 'Counties won', range=c(0, 1800)))

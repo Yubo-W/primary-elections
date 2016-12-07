@@ -1,6 +1,7 @@
 library(plotly)
 
 
+
 shinyUI(fluidPage(navbarPage('Primary Election',
                              tabPanel('Introduction',
                                       titlePanel('Background Information on Data'),

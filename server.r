@@ -23,7 +23,6 @@ shinyServer(function(input, output) {
                             'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                             'white', 'highschool', 'bachelors', 'income')
   
-  #############################################################
   # Manually adding in Louisiana and New Hampshire
   
   temp.primary <- primary %>%
@@ -49,7 +48,6 @@ shinyServer(function(input, output) {
   colnames(joined_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                              'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                              'white', 'highschool', 'bachelors', 'income')
-  #############################################################
 
   # Making the final data, joining previous final data with manually created dataframe for NH and LA.
   final_data <- rbind(final_data, joined_data)
@@ -67,10 +65,8 @@ shinyServer(function(input, output) {
     left_join(., hillary_by_county, by=c("abb", "county")) %>% 
     mutate(winner = ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
   nrow(dem_by_county)
-  
-  # 
 
-  #############################################################
+
   # Democratic Party plots.
   
   # bar plot1: democrat counties won
@@ -193,9 +189,7 @@ shinyServer(function(input, output) {
       )
     return (p)
   })
-  #############################################################
-  
-  #############################################################
+
   # Republican by County data.
   
   carson <- ByCounty(final_data, "Ben Carson")
@@ -274,13 +268,4 @@ shinyServer(function(input, output) {
   })
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  #############################################################
 })
