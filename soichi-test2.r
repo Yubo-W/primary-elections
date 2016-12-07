@@ -98,4 +98,30 @@ plot_ly(labels = names, values = votes_percent, type = 'pie') %>%
 
 
 
+#################################################################
+# dem state map
+View(dem_by_state)
+
+l <- list(color = toRGB("white"), width = 2)
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
+  add_trace(
+    z = ~z,
+    text = ~winner,
+    locations = ~abb,
+    color = ~z,
+    colors = c('blue', 'orange')
+  ) %>%
+  layout(
+    title = 'Bernie Vs Hillary Map',
+    geo = g
+  )
+
 
