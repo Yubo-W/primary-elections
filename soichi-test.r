@@ -52,16 +52,16 @@ colnames(joined_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'vote
 finalized_data <- rbind(final_data, joined_data)
 ## We won't have Alaska's data because Alaska does not participate in the primary elections.
 ## Missing states (not including alaska):
-#     North Dakota: votes by district
+#     - North Dakota: votes by district
 #     Massachussetts: manual sorting
 #     Connecticut: manual sorting
-#     Kansas: votes by district
+#     - Kansas: votes by district
 #     Maine: manual sorting
-#     Minnesota: missing data
-#     - New Hampshire: missing fips, manual sorting
+#     - Minnesota: missing data
+#     New Hampshire: missing fips, manual sorting
 #     Rhode Island: manual sorting
 #     Vermont: manual sorting
-#     Alaska: They don't conduct presidential primarys
+#     - Alaska: They don't conduct presidential primarys
 
 #combining data by state
 bernie_by_state <- ByState(final_data, "Bernie Sanders")
