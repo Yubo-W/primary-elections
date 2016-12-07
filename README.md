@@ -5,8 +5,12 @@
 The project is a web application built using Shiny, and is deployed to the Shiny servers and can be accessed by clicking the "Final Project" below:
 
 <center> Final Project </center>
+<br>  
+<center> 
+Source of data:  
+https://www.kaggle.com/benhamner/2016-us-election
+</center>  
 <br>
-Source of data: https://www.kaggle.com/benhamner/2016-us-election
 
 This web application is based off of data that is published [Ben Hamner](https://www.kaggle.com/benhamner/2016-us-election) on Kaggle. These CSV files are made by Ben Hamner. This data comes from very reputable and trustworthy sources, such as CNN and US Census.
 <br>
