@@ -60,6 +60,7 @@ colnames(joined_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'vote
                                'white', 'highschool', 'bachelors', 'income')
 #############################################################
 
+final_data <- 
 test_rep <- final_data %>% filter(party == "Republican") %>% select(-candidate, -votes)
 test_dem <- final_data %>% filter(party == "Democrat") %>% select(candidate) %>% unique() %>% filter(candidate != "No Preference")
 

@@ -75,8 +75,8 @@ shinyServer(function(input, output) {
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
     # stats
-    bernie_counties <- nrow(filtered.df %>% filter(winner=="Bernie"))
-    hillary_counties <- nrow(filtered.df %>% filter(winner=="Hillary"))
+    bernie_counties <- filtered.df %>% filter(winner=="Bernie") %>% nrow()
+    hillary_counties <- filtered.df %>% filter(winner=="Hillary") %>% nrow()
 
     #county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#FF7F0E")) %>%
