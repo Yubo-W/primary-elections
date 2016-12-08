@@ -114,8 +114,10 @@ shinyServer(function(input, output) {
     names <- c("Bernie Sanders", "Hillary Clinton")
     county_percent <- c(bernie_counties, hillary_counties)
     
-    plot_ly(labels = names, values = county_percent, type = 'pie') %>%
-      layout(title = 'Percentage of Counties Won',
+    colors <- c('#FF7F0E', '#1F77B4')
+    plot_ly(labels = names, values = county_percent, type = 'pie',
+            marker = list(colors = colors)) %>%
+    layout(title = 'Percentage of Counties Won',
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
@@ -130,7 +132,9 @@ shinyServer(function(input, output) {
     names <- c("Bernie Sanders", "Hillary Clinton")
     votes_percent <- c(bernie_votes, hillary_votes)
     
-    plot_ly(labels = names, values = votes_percent, type = 'pie') %>%
+    colors <- c('#FF7F0E', '#1F77B4')
+    plot_ly(labels = names, values = votes_percent, type = 'pie',
+            marker = list(colors = colors)) %>%
       layout(title = 'Percentage of Overall Popular Vote',
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
