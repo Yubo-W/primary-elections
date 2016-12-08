@@ -63,7 +63,7 @@ shinyServer(function(input, output) {
                                # } else {
                                #   color = "#36dde2"
                                # }
-                               , width = 3))) %>%
+                               , width = 1))) %>%
       add_trace(y = ~Donald_Trump, name = 'Donald Trump', marker = list(color = "#1F77B4")) %>%
       add_trace(y = ~John_Kasich, name = 'John Kasich', marker = list(color = "#36dde2")) %>%
       add_trace(y = ~Marco_Rubio, name = 'Marco Rubio', marker = list(color = "#f9f61b")) %>%
@@ -76,7 +76,7 @@ shinyServer(function(input, output) {
       add_trace(y = ~Rick_Santorum, name = 'Rick Santorum', marker = list(color = "#5b585b")) %>%
       layout(title = "Vote Dispersion for each State",
              xaxis = list(title = "States"),
-             yaxis = list(title = 'Votes', range=c(0, 3500000)), barmode = 'stack')
+             yaxis = list(title = 'Votes', range=c(0, 3000000)), barmode = 'stack')
     return (p)
   })
   
