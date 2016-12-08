@@ -2,11 +2,18 @@
 
 #### Contributors: Wynston Hsu, Soichi Tanabe, Yubo Wang
 
-The project is a web application built using Shiny, and is deployed to the Shiny servers and can be accessed by clicking the "Final Project" below:
+The project is a web application built using Shiny, and is deployed to the Shiny servers and can be accessed by clicking the "Final Project" below:  
 
 [**Final Project**](https://yubo-w.shinyapps.io/final-project-i-mwithher/)  
+[**Final Project** (Backup link, in case first link has connection issues)](https://wynhsu.shinyapps.io/final-project-I-mWithHer/)  
 Source of data: https://www.kaggle.com/benhamner/2016-us-election
 <br>
+
+### If there are connection issues even after trying the second link, refresh the page, or try the first link again.
+
+___
+
+### Documentation:
 
 This web application is based off of data that is published [**Ben Hamner**](https://www.kaggle.com/benhamner/2016-us-election) on Kaggle. These CSV files are made by Ben Hamner. This data comes from very reputable and trustworthy sources, such as CNN and US Census.
 <br>
