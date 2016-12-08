@@ -271,7 +271,7 @@ shinyServer(function(input, output) {
       add_trace(x = "Rand", name = "Rand", y = rand_counties, marker = list(color = "#000000")) %>%
       add_trace(x = "Rick", name = "Rick", y = rick_counties, marker = list(color = "#5b585b")) %>%
       layout(title = "Number of Counties Won",
-             yaxis = list(title = 'Counties won', range=c(0, 1800)))
+             yaxis = list(title = 'Counties won', range=c(0, 1400)))
     return (p)
   })
   
@@ -307,7 +307,7 @@ shinyServer(function(input, output) {
       add_trace(x = "Rand", name = "Rand", y = paul_votes, marker = list(color = "#000000")) %>%
       add_trace(x = "Rick", name = "Rick", y = santorum_votes, marker = list(color = "#5b585b")) %>%
       layout(title = "Overall Popular Vote",
-             yaxis = list(title = 'Counties won', range=c(0, 16000000)))
+             yaxis = list(title = 'Counties won', range=c(0, 14000000)))
     return (p)
   })
   
