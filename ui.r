@@ -26,7 +26,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                       ),
                              
                              tabPanel('Democratic',
-                                      titlePanel('Primary Election Democratic Party Statistics'),
+                                      titlePanel('Primary Election Statistics'),
                                       br(),
                                       br(),
                                       br(),
@@ -60,12 +60,6 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                         ),
                                         
                                         mainPanel(
-                                          br(),
-                                          h2("Data Visualization"),
-                                          br(),
-                                          br(),
-                                          br(),
-                                          br(),
                                           fluidRow(
                                             splitLayout(cellWidths = c("50%", "50%"), plotlyOutput("plot1"), plotlyOutput("plot2"))
                                           ),
@@ -85,7 +79,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                              ),
                              
                              tabPanel('Republican',
-                                      titlePanel('Primary Election Republican Party Statistics'),
+                                      titlePanel('Primary Election Statistics'),
                                       br(),
                                       br(),
                                       br(),

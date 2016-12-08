@@ -1,7 +1,7 @@
 # library the required packages.
 library(dplyr)
 library(plotly)
-
+library(shiny)
 
 # Shiny server
 shinyServer(function(input, output) {
@@ -23,8 +23,8 @@ shinyServer(function(input, output) {
                             'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                             'white', 'highschool', 'bachelors', 'income')
   
-  # Manually adding in Louisiana and New Hampshire
-  
+  ######################################################################################
+  # Data frame for dat ain New Hampshire and Louisiana.
   temp.primary <- primary %>%
     filter(state_abbreviation == 'LA' | state_abbreviation == 'NH')
   
@@ -48,19 +48,21 @@ shinyServer(function(input, output) {
   colnames(joined_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                              'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                              'white', 'highschool', 'bachelors', 'income')
-
+  ######################################################################################
+  
   # Making the final data, joining previous final data with manually created dataframe for NH and LA.
   final_data <- rbind(final_data, joined_data)
     
   # Create data by county
-  #select all information except candidate and votes and filter by choosing any candidate
+  # Select all information except candidate and votes and filter by choosing any candidate
   join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
     select(-candidate, -votes)
   
+  # Candidates by county.
   bernie_by_county <- ByCounty(final_data, "Bernie Sanders")
   hillary_by_county <- ByCounty(final_data, "Hillary Clinton")
   
-  #Join data
+  # Join candidates data.
   dem_by_county <- left_join(join_with, bernie_by_county, by=c("abb", "county")) %>%
     left_join(., hillary_by_county, by=c("abb", "county")) %>% 
     mutate(winner = ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
@@ -68,8 +70,7 @@ shinyServer(function(input, output) {
 
 
   # Democratic Party plots.
-  
-  # bar plot1: democrat counties won
+  # Bar plot1: democrat counties won
   output$plot1 <- renderPlotly({
     #filter based on user input
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
@@ -78,7 +79,7 @@ shinyServer(function(input, output) {
     bernie_counties <- filtered.df %>% filter(winner=="Bernie") %>% nrow()
     hillary_counties <- filtered.df %>% filter(winner=="Hillary") %>% nrow()
 
-    #county bar chart
+    # county bar chart
     p <- plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#FF7F0E")) %>%
       add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#1F77B4")) %>%
       layout(title = "Number of Counties Won",
@@ -103,7 +104,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # pie chart 1
+  # pie chart 1: democratic county wins by percent
   output$plot3 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -119,7 +120,7 @@ shinyServer(function(input, output) {
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  # pie chart 2
+  # pie chart 2: Overall democratic popular vote by percent.
   output$plot4 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -192,6 +193,7 @@ shinyServer(function(input, output) {
   # Republican by County data.
   mod_rep <- final_data %>% filter(party == "Republican") %>% select(-candidate, -votes)
   
+  # data on individual candidate.
   carson <- ByCounty(final_data, "Ben Carson")
   trump <- ByCounty(final_data, "Donald Trump")
   kasich <- ByCounty(final_data, "John Kasich")
@@ -204,6 +206,7 @@ shinyServer(function(input, output) {
   paul <- ByCounty(final_data, "Rand Paul")
   santorum <- ByCounty(final_data, "Rick Santorum")
   
+  # joining the data of all the republican candidates.
   rep_join <- left_join(mod_rep, trump, by = c("county", "abb"))
   rep_join <- left_join(rep_join, carson, by = c("county", "abb"))
   rep_join <- left_join(rep_join, kasich, by = c("county", "abb"))
@@ -216,17 +219,23 @@ shinyServer(function(input, output) {
   rep_join <- left_join(rep_join, paul, by = c("county", "abb"))
   rep_join <- left_join(rep_join, santorum, by = c("county", "abb"))
   
+  # making "row" column for republican data and replacing NA with 0.
   rep_by_county <- rep_join %>% unique() %>% mutate(row = seq(1:nrow(.)))
   rep_by_county[is.na(rep_by_county)] <- 0
   
+  # dataframe of potential winners for each county.
   rep_winners <- rep_by_county %>% 
     select(-state, -female, -county, -abb, -party, -black, -indian, -asian, -hawaiian, -multi, -hispanic,
            -white, -highschool, -bachelors, -income, -row)
   
+  # Finding the candidate with the most votes by row and assigning that candidate as the winner.
   winner <- as.data.frame(cbind(row.names(rep_winners),apply(rep_winners,1,function(x)
     names(rep_winners)[which(x==max(x))])))
+  
+  # Making a "row" column for the winner.
   winner$row <- seq(1:nrow(winner))
   
+  # making the final republican by county dataframe.
   rep_by_county <- left_join(rep_by_county, winner, by = "row")
   names(rep_by_county)[names(rep_by_county) == "V1"] <- "remove"
   names(rep_by_county)[names(rep_by_county) == "V2"] <- "winner"
@@ -308,11 +317,12 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # Republican pie chart 1
+  # Republican pie chart 1: republican candidates with counties won.
   output$rep_plot3 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3,
                                      input$rep_race4, input$rep_education1, input$rep_education2, input$rep_income1)
     
+    # stats.
     ben_counties <- nrow(filtered.df %>% filter(winner=="Ben_Carson"))
     donald_counties <- nrow(filtered.df %>% filter(winner=="Donald_Trump"))
     john_counties <- nrow(filtered.df %>% filter(winner=="John_Kasich"))
@@ -325,6 +335,7 @@ shinyServer(function(input, output) {
     rand_counties <- nrow(filtered.df %>% filter(winner=="Rand_Paul"))
     rick_counties <- nrow(filtered.df %>% filter(winner=="Rick_Santorum"))
     
+    # data for the pie chart.
     names <- c("Ben Carson", "Donald Trump", "John Kasich", "Marco Rubio", "Ted Cruz",
                "Carly Fiorina", "Chris Christie", "Jeb Bush", "Mike Huckabee", "Rand Paul",
                "Rick Santorum")
@@ -332,13 +343,14 @@ shinyServer(function(input, output) {
                         ted_counties, carly_counties, chris_counties, jeb_counties, mike_counties,
                         rand_counties, rick_counties)
     
+    # making pie chart.
     plot_ly(labels = names, values = county_percent, type = 'pie') %>%
       layout(title = 'Percentage of Counties Won',
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  # Republican pie chart 2
+  # Republican pie chart 2: republican overall state vote data.
   output$rep_plot4 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3,
                                      input$rep_race4, input$rep_education1, input$rep_education2, input$rep_income1)
@@ -356,6 +368,7 @@ shinyServer(function(input, output) {
     paul_votes <- sum(filtered.df$Rand_Paul)
     santorum_votes <- sum(filtered.df$Rick_Santorum)
     
+    # data for pie chart.
     names <- c("Ben Carson", "Donald Trump", "John Kasich", "Marco Rubio", "Ted Cruz",
                "Carly Fiorina", "Chris Christie", "Jeb Bush", "Mike Huckabee", "Rand Paul",
                "Rick Santorum")
@@ -363,6 +376,7 @@ shinyServer(function(input, output) {
                         cruz_votes, fiorina_votes, christie_votes, bush_votes, huckabee_votes,
                         paul_votes, santorum_votes)
     
+    # making the pie chart.
     plot_ly(labels = names, values = county_percent, type = 'pie') %>%
       layout(title = 'Percentage of Overall Popular Vote',
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
@@ -373,6 +387,7 @@ shinyServer(function(input, output) {
   output$rep_plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
+    # stats
     carson_by_state <- ByState(filtered.df, "Ben Carson")
     trump_by_state <- ByState(filtered.df, "Donald Trump")
     kasich_by_state <- ByState(filtered.df, "John Kasich")
@@ -444,6 +459,4 @@ shinyServer(function(input, output) {
              yaxis = list(title = 'Votes', range=c(0, 3000000)), barmode = 'stack')
     return (p)
   })
-  
-  
 })
