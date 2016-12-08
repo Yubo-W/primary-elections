@@ -698,5 +698,4 @@ shinyServer(function(input, output) {
                       showarrow = FALSE)
     
   })
-  
 })

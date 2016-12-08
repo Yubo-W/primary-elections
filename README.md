@@ -21,9 +21,9 @@ The data is displayed using three different visualizations:
 
 (Everything is done with Plotly library) 
  
-- Bar Graph
-- Pie Chart
-- Map
+- Bar Graph (To show the number of counties won by each candidate and the overall popular vote.)
+- Pie Chart (To show the percentage of counties won by each candidate and the percentage of the overall popular vote each candidate received.)
+- Map (Available for the Democratic party. Republican party does not have a map because a dispersion chart is much more effective since there are many more candidates compared to the democratic party.)
 
 All Republican Candidates are accounted for in our visuals. However, in the Democratic party, **we did not include Martin O'Malley** because there were only 752 votes in in total for Martin O'Malley, so it is not a significant enough of votes to be included in the visual data. Therefore, we chose to not include Martin O'Malley.
 
