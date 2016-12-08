@@ -1,7 +1,7 @@
 library(plotly)
 library(shiny)
 
-shinyUI(navbarPage('Primary Election',
+shinyUI(fluidPage('Primary Election',
                    tabPanel('Republican',
                             titlePanel('Primary Election Republican Party Statistics'),
                             h3('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hsu'),
@@ -41,11 +41,11 @@ shinyUI(navbarPage('Primary Election',
                               mainPanel(
                                 br(),
                                 br(),
-                                plotlyOutput('plot1'),
-                                # br(),
-                                # br(),
-                                # br(),
-                                # plotlyOutput('plot2'),
+                                plotlyOutput('plot5'),
+                                br(),
+                                br(),
+                                br(),
+                                plotlyOutput('plot6')
                                 # br(),
                                 # br(),
                                 # br(),
