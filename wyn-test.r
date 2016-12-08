@@ -2,97 +2,93 @@ library(dplyr)
 library(plotly)
 
 #summary data
-wyn_rep_by_state <- rep_by_state %>% 
+h_rep_by_state <- rep_by_state %>% 
   mutate(total = Ben_Carson + Donald_Trump + John_Kasich + Marco_Rubio + Ted_Cruz
          + Carly_Fiorina + Chris_Christie + Jeb_Bush + Mike_Huckabee + Rand_Paul + Rick_Santorum)
 
 #each candidate percent
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Ben_Carson_percent = round((Ben_Carson / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Donald_Trump_percent = round((Donald_Trump / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(John_Kasich_percent = round((John_Kasich / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Marco_Rubio_percent = round((Marco_Rubio / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Ted_Cruz_percent = round((Ted_Cruz / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Carly_Fiorina_percent = round((Carly_Fiorina / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Chris_Christie_percent = round((Chris_Christie / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Jeb_Bush_percent = round((Jeb_Bush / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Mike_Huckabee_percent = round((Mike_Huckabee / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Rand_Paul_percent = round((Rand_Paul / total)*10000)/100)
 }
-for(i in wyn_rep_by_state$state) {
-  wyn_rep_by_state <- wyn_rep_by_state %>% 
+for(i in h_rep_by_state$state) {
+  h_rep_by_state <- h_rep_by_state %>% 
     mutate(Rick_Santorum_percent = round((Rick_Santorum / total)*10000)/100)
 }
 
-wyn_rep_by_state_test <- wyn_rep_by_state %>% 
-  mutate(total_percent = Ben_Carson_percent + Donald_Trump_percent + John_Kasich_percent + Marco_Rubio_percent
-         + Ted_Cruz_percent + Carly_Fiorina_percent + Chris_Christie_percent + Jeb_Bush_percent
-         + Mike_Huckabee_percent + Rand_Paul_percent + Rick_Santorum_percent)
 
 #generate vectors
 y <- vector()
-for(i in wyn_rep_by_state$abb) {
+for(i in h_rep_by_state$abb) {
   y <- append(y, i)}
 x1 <- vector()
-for(i in wyn_rep_by_state$Donald_Trump_percent) {
+for(i in h_rep_by_state$Donald_Trump_percent) {
   x1 <-c(x1, i)}
 x2 <- vector()
-for(i in wyn_rep_by_state$John_Kasich_percent) {
+for(i in h_rep_by_state$John_Kasich_percent) {
   x2 <-c(x2, i)}
 x3 <- vector()
-for(i in wyn_rep_by_state$Marco_Rubio_percent) {
+for(i in h_rep_by_state$Marco_Rubio_percent) {
   x3 <-c(x3, i)}
 x4 <- vector()
-for(i in wyn_rep_by_state$Ted_Cruz_percent) {
+for(i in h_rep_by_state$Ted_Cruz_percent) {
   x4 <-c(x4, i)}
 x5 <- vector()
-for(i in wyn_rep_by_state$Ben_Carson_percent) {
+for(i in h_rep_by_state$Ben_Carson_percent) {
   x5 <-c(x5, i)}
 x6 <- vector()
-for(i in wyn_rep_by_state$Carly_Fiorina_percent) {
+for(i in h_rep_by_state$Carly_Fiorina_percent) {
   x6 <-c(x6, i)}
 x7 <- vector()
-for(i in wyn_rep_by_state$Chris_Christie_percent) {
+for(i in h_rep_by_state$Chris_Christie_percent) {
   x7 <-c(x7, i)}
 x8 <- vector()
-for(i in wyn_rep_by_state$Jeb_Bush_percent) {
+for(i in h_rep_by_state$Jeb_Bush_percent) {
   x8 <-c(x8, i)}
 x9 <- vector()
-for(i in wyn_rep_by_state$Mike_Huckabee_percent) {
+for(i in h_rep_by_state$Mike_Huckabee_percent) {
   x9 <-c(x9, i)}
 x10 <- vector()
-for(i in wyn_rep_by_state$Rand_Paul_percent) {
+for(i in h_rep_by_state$Rand_Paul_percent) {
   x10 <-c(x10, i)}
 x11 <- vector()
-for(i in wyn_rep_by_state$Rick_Santorum_percent) {
+for(i in h_rep_by_state$Rick_Santorum_percent) {
   x11 <-c(x11, i)}
 
 
@@ -101,9 +97,9 @@ df <- data.frame(y, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11)
 
 #horizontal bar chart
 plot_ly(df, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
-              marker = list(color = '#1F77B4',
-                            line = list(color = '#000000', width = 1)),
-              name = 'Donald Trump') %>%
+              marker = list(color = '#1F77B4'),
+                            
+                            name = 'Donald Trump') %>%
   add_trace(x = ~x2, marker = list(color = '#36dde2'), name = 'John Kasich') %>%
   add_trace(x = ~x3, marker = list(color = '#f9f61b'), name = 'Marco Rubio') %>%
   add_trace(x = ~x4, marker = list(color = '#e59f14'), name = 'Ted Cruz') %>%
@@ -114,7 +110,7 @@ plot_ly(df, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
   add_trace(x = ~x9, marker = list(color = '#b814e5'), name = 'Mike Huckabee') %>%
   add_trace(x = ~x10, marker = list(color = '#5e3100'), name = 'Rand Paul') %>%
   add_trace(x = ~x11, marker = list(color = '#5b585b'), name = 'Rick Santorum') %>%
-  layout(xaxis = list(title = "Primary Elections Republican Party Votes Dispersion",
+  layout(xaxis = list(title = "Votes Dispersion for each State (%)",
                       showgrid = FALSE,
                       showline = FALSE,
                       showticklabels = FALSE,

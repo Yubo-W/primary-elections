@@ -383,7 +383,7 @@ shinyServer(function(input, output) {
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  #Republican Stack Bar
+  # Republican Stack Bar
   output$rep_plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -400,7 +400,7 @@ shinyServer(function(input, output) {
     paul_by_state <- ByState(filtered.df, "Rand Paul")
     santorum_by_state <- ByState(filtered.df, "Rick Santorum")
     
-    
+    # creates Republican join table by state
     rep_by_state <- left_join(carson_by_state, trump_by_state, by=c("state","abb","county")) %>% 
       left_join(., kasich_by_state, by=c("state","abb","county")) %>% 
       left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
@@ -432,18 +432,10 @@ shinyServer(function(input, output) {
     rep_by_state <- rep_by_state %>% 
       select(-remove)
     
-    
+    # Stack Bar Grah
     p <- plot_ly(rep_by_state, x = ~abb, y = ~Ben_Carson, type = 'bar', name = 'Ben Carson', 
                  marker = list(color = "##FF7F0E", 
-                               line = list(color = '#000000'
-                                           #   if(rep_by_state$winner=="Donald_Trump") {
-                                           #   color = "#1F77B4"
-                                           # } else if (rep_by_state$winner=="Ted_Cruz") {
-                                           #   color = "#e59f14"
-                                           # } else {
-                                           #   color = "#36dde2"
-                                           # }
-                                           , width = 1))) %>%
+                               line = list(color = '#000000', width = 1))) %>%
       add_trace(y = ~Donald_Trump, name = 'Donald Trump', marker = list(color = "#1F77B4")) %>%
       add_trace(y = ~John_Kasich, name = 'John Kasich', marker = list(color = "#36dde2")) %>%
       add_trace(y = ~Marco_Rubio, name = 'Marco Rubio', marker = list(color = "#f9f61b")) %>%
@@ -459,4 +451,252 @@ shinyServer(function(input, output) {
              yaxis = list(title = 'Votes', range=c(0, 3000000)), barmode = 'stack')
     return (p)
   })
+  
+  # Horizontal Stack Bar
+  output$rep_plot6 <- renderPlotly({
+    filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
+    
+    # stats
+    carson_by_state <- ByState(filtered.df, "Ben Carson")
+    trump_by_state <- ByState(filtered.df, "Donald Trump")
+    kasich_by_state <- ByState(filtered.df, "John Kasich")
+    rubio_by_state <- ByState(filtered.df, "Marco Rubio")
+    cruz_by_state <- ByState(filtered.df, "Ted Cruz")
+    fiorina_by_state <- ByState(filtered.df, "Carly Fiorina")
+    christie_by_state <- ByState(filtered.df, "Chris Christie")
+    bush_by_state <- ByState(filtered.df, "Jeb Bush")
+    huckabee_by_state <- ByState(filtered.df, "Mike Huckabee")
+    paul_by_state <- ByState(filtered.df, "Rand Paul")
+    santorum_by_state <- ByState(filtered.df, "Rick Santorum")
+    
+    # creates Republican join table by state
+    rep_by_state <- left_join(carson_by_state, trump_by_state, by=c("state","abb","county")) %>% 
+      left_join(., kasich_by_state, by=c("state","abb","county")) %>% 
+      left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
+      left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
+      left_join(., fiorina_by_state, by=c("state","abb","county")) %>% 
+      left_join(., christie_by_state, by=c("state","abb","county")) %>% 
+      left_join(., bush_by_state, by=c("state","abb","county")) %>% 
+      left_join(., huckabee_by_state, by=c("state","abb","county")) %>% 
+      left_join(., paul_by_state, by=c("state","abb","county")) %>% 
+      left_join(., santorum_by_state, by=c("state","abb","county"))
+    rep_by_state <- rep_by_state[, c('state', 'abb', 'county', 'Ben_Carson', 'Donald_Trump', 'John_Kasich',
+                                     'Marco_Rubio', 'Ted_Cruz', 'Carly_Fiorina', 'Chris_Christie', 'Jeb_Bush',
+                                     'Mike_Huckabee', 'Rand_Paul', 'Rick_Santorum')]
+    
+    rep_by_state <- rep_by_state %>% unique() %>% mutate(row = seq(1:nrow(.)))
+    rep_state_winners <- rep_by_state %>% 
+      select(-state, -abb, -county) %>% 
+      mutate(row = seq(1:nrow(.)))
+    
+    rep_state_winners$row <- seq(1:nrow(rep_state_winners))
+    
+    state_winner <- as.data.frame(cbind(row.names(rep_state_winners),apply(rep_state_winners,1,function(x)
+      names(rep_state_winners)[which(x==max(x))])))
+    state_winner$row <- seq(1:nrow(state_winner))
+    
+    rep_by_state <- left_join(rep_by_state, state_winner, by = "row")
+    names(rep_by_state)[names(rep_by_state) == "V1"] <- "remove"
+    names(rep_by_state)[names(rep_by_state) == "V2"] <- "winner"
+    rep_by_state <- rep_by_state %>% 
+      select(-remove)
+    
+    # calculates total Republican votes
+    h_rep_by_state <- rep_by_state %>% 
+      mutate(total = Ben_Carson + Donald_Trump + John_Kasich + Marco_Rubio + Ted_Cruz
+             + Carly_Fiorina + Chris_Christie + Jeb_Bush + Mike_Huckabee + Rand_Paul + Rick_Santorum)
+    
+    # each candidate's percentage
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Ben_Carson_percent = round((Ben_Carson / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Donald_Trump_percent = round((Donald_Trump / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(John_Kasich_percent = round((John_Kasich / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Marco_Rubio_percent = round((Marco_Rubio / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Ted_Cruz_percent = round((Ted_Cruz / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Carly_Fiorina_percent = round((Carly_Fiorina / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Chris_Christie_percent = round((Chris_Christie / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Jeb_Bush_percent = round((Jeb_Bush / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Mike_Huckabee_percent = round((Mike_Huckabee / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Rand_Paul_percent = round((Rand_Paul / total)*10000)/100)
+    }
+    for(i in h_rep_by_state$state) {
+      h_rep_by_state <- h_rep_by_state %>% 
+        mutate(Rick_Santorum_percent = round((Rick_Santorum / total)*10000)/100)
+    }
+    
+    
+    # generate vectors
+    y <- vector()
+    for(i in h_rep_by_state$abb) {
+      y <- append(y, i)}
+    x1 <- vector()
+    for(i in h_rep_by_state$Donald_Trump_percent) {
+      x1 <-c(x1, i)}
+    x2 <- vector()
+    for(i in h_rep_by_state$John_Kasich_percent) {
+      x2 <-c(x2, i)}
+    x3 <- vector()
+    for(i in h_rep_by_state$Marco_Rubio_percent) {
+      x3 <-c(x3, i)}
+    x4 <- vector()
+    for(i in h_rep_by_state$Ted_Cruz_percent) {
+      x4 <-c(x4, i)}
+    x5 <- vector()
+    for(i in h_rep_by_state$Ben_Carson_percent) {
+      x5 <-c(x5, i)}
+    x6 <- vector()
+    for(i in h_rep_by_state$Carly_Fiorina_percent) {
+      x6 <-c(x6, i)}
+    x7 <- vector()
+    for(i in h_rep_by_state$Chris_Christie_percent) {
+      x7 <-c(x7, i)}
+    x8 <- vector()
+    for(i in h_rep_by_state$Jeb_Bush_percent) {
+      x8 <-c(x8, i)}
+    x9 <- vector()
+    for(i in h_rep_by_state$Mike_Huckabee_percent) {
+      x9 <-c(x9, i)}
+    x10 <- vector()
+    for(i in h_rep_by_state$Rand_Paul_percent) {
+      x10 <-c(x10, i)}
+    x11 <- vector()
+    for(i in h_rep_by_state$Rick_Santorum_percent) {
+      x11 <-c(x11, i)}
+    
+    df <- data.frame(y, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11)
+    
+    
+    # horizontal stack bar chart
+    plot_ly(df, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
+            marker = list(color = '#1F77B4'), name = 'Donald Trump') %>%
+      add_trace(x = ~x2, marker = list(color = '#36dde2'), name = 'John Kasich') %>%
+      add_trace(x = ~x3, marker = list(color = '#f9f61b'), name = 'Marco Rubio') %>%
+      add_trace(x = ~x4, marker = list(color = '#e59f14'), name = 'Ted Cruz') %>%
+      add_trace(x = ~x5, marker = list(color = '#FF7F0E'), name = 'Ben Carson') %>%
+      add_trace(x = ~x6, marker = list(color = '#e54514'), name = 'Carly Fiorina') %>%
+      add_trace(x = ~x7, marker = list(color = '#14e518'), name = 'Chris Christie') %>%
+      add_trace(x = ~x8, marker = list(color = '#7214e5'), name = 'Jeb Bush') %>% 
+      add_trace(x = ~x9, marker = list(color = '#b814e5'), name = 'Mike Huckabee') %>%
+      add_trace(x = ~x10, marker = list(color = '#5e3100'), name = 'Rand Paul') %>%
+      add_trace(x = ~x11, marker = list(color = '#5b585b'), name = 'Rick Santorum') %>%
+      layout(xaxis = list(title = "Votes Dispersion for each State (%)",
+                          showgrid = FALSE,
+                          showline = FALSE,
+                          showticklabels = FALSE,
+                          zeroline = FALSE,
+                          domain = c(0.15, 1)),
+             yaxis = list(title = "",
+                          showgrid = FALSE,
+                          showline = FALSE,
+                          showticklabels = FALSE,
+                          zeroline = FALSE),
+             barmode = 'stack',
+             paper_bgcolor = 'rgb(255, 255, 255)', plot_bgcolor = 'rgb(255, 255, 255)',
+             margin = list(l = 0, r = 0, t = 0, b = 50),
+             showlegend = TRUE) %>%
+      # labeling the y-axis
+      add_annotations(xref = 'paper', yref = 'y', x = 0.14, y = y,
+                      xanchor = 'right',
+                      text = y,
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(67, 67, 67)'),
+                      showarrow = FALSE, align = 'right') %>%
+      # labeling the percentages of each bar (x_axis)
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 + x6 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 + x6 + x7 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE) %>%
+      add_annotations(xref = 'x', yref = 'y',
+                      x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 / 2, y = y,
+                      text = "",
+                      font = list(family = 'Arial', size = 12,
+                                  color = 'rgb(248, 248, 255)'),
+                      showarrow = FALSE)
+    
+  })
+  
 })

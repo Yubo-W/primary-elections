@@ -123,7 +123,10 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                         ),
                                         br(),
                                         br(),
-                                        plotlyOutput('rep_plot5')
+                                        plotlyOutput('rep_plot5'),
+                                        br(),
+                                        br(),
+                                        plotlyOutput('rep_plot6')
                                       )
                                     )
                                   )
