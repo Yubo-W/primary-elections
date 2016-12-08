@@ -221,10 +221,7 @@ shinyServer(function(input, output) {
   
   rep_winners <- rep_by_county %>% 
     select(-state, -female, -county, -abb, -party, -black, -indian, -asian, -hawaiian, -multi, -hispanic,
-           -white, -highschool, -bachelors, -income) %>% 
-    mutate(row = seq(1:nrow(.)))
-  
-  rep_winners$row <- seq(1:nrow(rep_winners))
+           -white, -highschool, -bachelors, -income, -row)
   
   winner <- as.data.frame(cbind(row.names(rep_winners),apply(rep_winners,1,function(x)
     names(rep_winners)[which(x==max(x))])))
@@ -234,7 +231,7 @@ shinyServer(function(input, output) {
   names(rep_by_county)[names(rep_by_county) == "V1"] <- "remove"
   names(rep_by_county)[names(rep_by_county) == "V2"] <- "winner"
   rep_by_county <- rep_by_county %>% 
-    select(-remove)
+    select(-remove, -row)
   ######################################################################################
   
   # Republican Party plots.
@@ -271,7 +268,7 @@ shinyServer(function(input, output) {
       add_trace(x = "Rand", name = "Rand", y = rand_counties, marker = list(color = "#000000")) %>%
       add_trace(x = "Rick", name = "Rick", y = rick_counties, marker = list(color = "#5b585b")) %>%
       layout(title = "Number of Counties Won",
-             yaxis = list(title = 'Counties won', range=c(0, 1400)))
+             yaxis = list(title = 'Counties won', range=c(0, 2000)))
     return (p)
   })
   
