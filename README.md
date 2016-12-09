@@ -70,15 +70,15 @@ ___
 
 ### Challenges:
 1. CSV file data had holes in it. A lot of counties didn't have data regarding ethnicity, education, and income. This means a lot of entries were displayed as NA.
-   * **Solution** Before we could do anything else with our data, we filtered out all the NAs with `na.omit()`.
+   * **Solution:** Before we could do anything else with our data, we filtered out all the NAs with `na.omit()`.
 2. Louisiana and New Hamshire's keys didn't match for some reason.
-   * **Solution** We had to manually match the data.
+   * **Solution:** We had to manually match the data.
 3. Choropleth map for Plotly was meant for showing a range between values: continuum vs dichotomy. For our Democratic State map, we only wanted to display 3 possible values: blue for Hillary, orange for Bernie, and white if the data for that state was not available. 
-   * **Solution** Creating a z-index column which either was a 0 or 1. This way, we were able to do a choropleth map with just 2 values (and white for null), and we set `showscale=FALSE` so you can't tell the map was meant to show a range.
+   * **Solution:** Creating a z-index column which either was a 0 or 1. This way, we were able to do a choropleth map with just 2 values (and white for null), and we set `showscale=FALSE` so you can't tell the map was meant to show a range.
 4. Republican party had multiple candidates, not just 2.
-   * **Solution** We had to make additional comparing statements to find the max number of votes to see which candidate was the winner per county and state.
+   * **Solution:** We had to make additional comparing statements to find the max number of votes to see which candidate was the winner per county and state.
 5. Merge conflicts on Github. 
-   * **Solution** All group members needed to understand how to resolve merge conflicts. We also made a github cheat sheet so we can just copy and paste the commands on the paper such as `git pull --rebase origin master `.
+   * **Solution:** All group members needed to understand how to resolve merge conflicts. We also made a github cheat sheet so we can just copy and paste the commands on the paper such as `git pull --rebase origin master `.
 
 ___
 
