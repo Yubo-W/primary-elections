@@ -65,15 +65,7 @@ ___
 17. Donald Trump had won every state so we decided to replace the states map with a horizontal stacked chart instead to display percentages for each Republican candidate.
 18. We finally finished!
 
-___
-1. one
-   * nested
 
-2. two
-   * nested
-
-3. three
-   * nested
 ___
 
 ### Challenges:
