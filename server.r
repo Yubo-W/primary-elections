@@ -286,17 +286,17 @@ shinyServer(function(input, output) {
     mike_counties <- nrow(filtered.df %>% filter(winner=="Mike_Huckabee"))
     rand_counties <- nrow(filtered.df %>% filter(winner=="Rand_Paul"))
     rick_counties <- nrow(filtered.df %>% filter(winner=="Rick_Santorum"))
-    
+
     #county bar chart
-    p <- plot_ly(x = "Ben", name = "Ben", y = ben_counties, type = "bar", marker = list(color = "#FF7F0E")) %>%
-      add_trace(x = "Donald", name = "Donald", y = donald_counties, marker = list(color = "#1F77B4")) %>%
-      add_trace(x = "John", name = "John", y = john_counties, marker = list(color = "#36dde2")) %>%
+    p <- plot_ly(x = "Ben", name = "Ben", y = ben_counties, type = "bar", marker = list(color = "#b814e5")) %>%
+      add_trace(x = "Donald", name = "Donald", y = donald_counties, marker = list(color = "#e54514")) %>%
+      add_trace(x = "John", name = "John", y = john_counties, marker = list(color = "#8c0202")) %>%
       add_trace(x = "Marco", name = "Marco", y = marco_counties, marker = list(color = "#f9f61b")) %>%
       add_trace(x = "Ted", name = "Ted", y = ted_counties, marker = list(color = "#e59f14")) %>%
-      add_trace(x = "Carly", name = "Carly", y = carly_counties, marker = list(color = "#e54514")) %>%
+      add_trace(x = "Carly", name = "Carly", y = carly_counties, marker = list(color = "#1F77B4")) %>%
       add_trace(x = "Chris", name = "Chris", y = chris_counties, marker = list(color = "#14e518")) %>%
       add_trace(x = "Jeb", name = "Jeb", y = jeb_counties, marker = list(color = "#7214e5")) %>%
-      add_trace(x = "Mike", name = "Mike", y = mike_counties, marker = list(color = "#b814e5")) %>%
+      add_trace(x = "Mike", name = "Mike", y = mike_counties, marker = list(color = "#36dde2")) %>%
       add_trace(x = "Rand", name = "Rand", y = rand_counties, marker = list(color = "#000000")) %>%
       add_trace(x = "Rick", name = "Rick", y = rick_counties, marker = list(color = "#5b585b")) %>%
       layout(title = "Number of Counties Won",
@@ -323,16 +323,18 @@ shinyServer(function(input, output) {
     paul_votes <- sum(filtered.df$Rand_Paul)
     santorum_votes <- sum(filtered.df$Rick_Santorum)
     
+    # making pie chart.
+    
     #county bar chart
-    p <- plot_ly(x = "Ben", name = "Ben", y = carson_votes, type = "bar", marker = list(color = "#FF7F0E")) %>%
-      add_trace(x = "Donald", name = "Donald", y = trump_votes, marker = list(color = "#1F77B4")) %>%
-      add_trace(x = "John", name = "John", y = kasich_votes, marker = list(color = "#36dde2")) %>%
+    p <- plot_ly(x = "Ben", name = "Ben", y = carson_votes, type = "bar", marker = list(color = "#b814e5")) %>%
+      add_trace(x = "Donald", name = "Donald", y = trump_votes, marker = list(color = "#e54514")) %>%
+      add_trace(x = "John", name = "John", y = kasich_votes, marker = list(color = "#8c0202")) %>%
       add_trace(x = "Marco", name = "Marco", y = rubio_votes, marker = list(color = "#f9f61b")) %>%
       add_trace(x = "Ted", name = "Ted", y = cruz_votes, marker = list(color = "#e59f14")) %>%
-      add_trace(x = "Carly", name = "Carly", y = fiorina_votes, marker = list(color = "#e54514")) %>%
+      add_trace(x = "Carly", name = "Carly", y = fiorina_votes, marker = list(color = "#1F77B4")) %>%
       add_trace(x = "Chris", name = "Chris", y = christie_votes, marker = list(color = "#14e518")) %>%
       add_trace(x = "Jeb", name = "Jeb", y = bush_votes, marker = list(color = "#7214e5")) %>%
-      add_trace(x = "Mike", name = "Mike", y = huckabee_votes, marker = list(color = "#b814e5")) %>%
+      add_trace(x = "Mike", name = "Mike", y = huckabee_votes, marker = list(color = "#36dde2")) %>%
       add_trace(x = "Rand", name = "Rand", y = paul_votes, marker = list(color = "#000000")) %>%
       add_trace(x = "Rick", name = "Rick", y = santorum_votes, marker = list(color = "#5b585b")) %>%
       layout(title = "Overall Popular Vote",
@@ -365,9 +367,11 @@ shinyServer(function(input, output) {
     county_percent <- c(ben_counties, donald_counties, john_counties, marco_counties,
                         ted_counties, carly_counties, chris_counties, jeb_counties, mike_counties,
                         rand_counties, rick_counties)
-    
+    #                          a           c                              a                                 b                         
+    colors <- c('#b814e5', '#e54514', '#8c0202', '#f9f61b', '#e59f14', '#1F77B4', '#14e518', '#7214e5', '#36dde2', '#000000', '#5b585b')
     # making pie chart.
-    plot_ly(labels = names, values = county_percent, type = 'pie') %>%
+    plot_ly(labels = names, values = county_percent, type = 'pie',
+            marker = list(colors = colors)) %>%
       layout(title = 'Percentage of Counties Won',
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -395,18 +399,21 @@ shinyServer(function(input, output) {
     names <- c("Ben Carson", "Donald Trump", "John Kasich", "Marco Rubio", "Ted Cruz",
                "Carly Fiorina", "Chris Christie", "Jeb Bush", "Mike Huckabee", "Rand Paul",
                "Rick Santorum")
-    county_percent <- c(carson_votes, trump_votes, kasich_votes, rubio_votes,
+    votes_percent <- c(carson_votes, trump_votes, kasich_votes, rubio_votes,
                         cruz_votes, fiorina_votes, christie_votes, bush_votes, huckabee_votes,
                         paul_votes, santorum_votes)
     
     # making the pie chart.
-    plot_ly(labels = names, values = county_percent, type = 'pie') %>%
+    colors <- c('#b814e5', '#e54514', '#8c0202', '#f9f61b', '#e59f14', '#1F77B4', '#14e518', '#7214e5', '#36dde2', '#000000', '#5b585b')
+    # making pie chart.
+    plot_ly(labels = names, values = votes_percent, type = 'pie',
+            marker = list(colors = colors)) %>%
       layout(title = 'Percentage of Overall Popular Vote',
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  # Republican Stack Bar
+  # Republican Stack Bar Vertical
   output$rep_plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -415,17 +422,17 @@ shinyServer(function(input, output) {
     
     # Stack Bar Grah
     p <- plot_ly(rep_by_state, x = ~abb, y = ~Ben_Carson, type = 'bar', name = 'Ben Carson', 
-                 marker = list(color = "#FF7F0E", 
+                 marker = list(color = "#b814e5", 
                                line = list(color = '#000000', width = 1))) %>%
-      add_trace(y = ~Donald_Trump, name = 'Donald Trump', marker = list(color = "#1F77B4")) %>%
-      add_trace(y = ~John_Kasich, name = 'John Kasich', marker = list(color = "#36dde2")) %>%
+      add_trace(y = ~Donald_Trump, name = 'Donald Trump', marker = list(color = "#e54514")) %>%
+      add_trace(y = ~John_Kasich, name = 'John Kasich', marker = list(color = "#8c0202")) %>%
       add_trace(y = ~Marco_Rubio, name = 'Marco Rubio', marker = list(color = "#f9f61b")) %>%
       add_trace(y = ~Ted_Cruz, name = 'Ted Cruz', marker = list(color = "#e59f14")) %>%
-      add_trace(y = ~Carly_Fiorina, name = 'Carly Fiorina', marker = list(color = "#e54514")) %>%
+      add_trace(y = ~Carly_Fiorina, name = 'Carly Fiorina', marker = list(color = "#1F77B4")) %>%
       add_trace(y = ~Chris_Christie, name = 'Chris Christie', marker = list(color = "#14e518")) %>%
       add_trace(y = ~Jeb_Bush, name = 'Jeb Bush', marker = list(color = "#7214e5")) %>%
-      add_trace(y = ~Mike_Huckabee, name = 'Mike Huckabee', marker = list(color = "#b814e5")) %>%
-      add_trace(y = ~Rand_Paul, name = 'Rand Paul', marker = list(color = "#5e3100")) %>%
+      add_trace(y = ~Mike_Huckabee, name = 'Mike Huckabee', marker = list(color = "#36dde2")) %>%
+      add_trace(y = ~Rand_Paul, name = 'Rand Paul', marker = list(color = "#000000")) %>%
       add_trace(y = ~Rick_Santorum, name = 'Rick Santorum', marker = list(color = "#5b585b")) %>%
       layout(title = "Vote Dispersion for each State",
              xaxis = list(title = "States"),
@@ -532,19 +539,19 @@ shinyServer(function(input, output) {
     
     df <- data.frame(y, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11)
     
-    
+    colors <- c('#b814e5', '#e54514', '#8c0202', '#f9f61b', '#e59f14', '#1F77B4', '#14e518', '#7214e5', '#36dde2', '#000000', '#5b585b')
     # horizontal stack bar chart
     plot_ly(df, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
-            marker = list(color = '#1F77B4'), name = 'Donald Trump') %>%
-      add_trace(x = ~x2, marker = list(color = '#36dde2'), name = 'John Kasich') %>%
+            marker = list(color = '#e54514'), name = 'Donald Trump') %>%
+      add_trace(x = ~x2, marker = list(color = '#8c0202'), name = 'John Kasich') %>%
       add_trace(x = ~x3, marker = list(color = '#f9f61b'), name = 'Marco Rubio') %>%
       add_trace(x = ~x4, marker = list(color = '#e59f14'), name = 'Ted Cruz') %>%
-      add_trace(x = ~x5, marker = list(color = '#FF7F0E'), name = 'Ben Carson') %>%
-      add_trace(x = ~x6, marker = list(color = '#e54514'), name = 'Carly Fiorina') %>%
+      add_trace(x = ~x5, marker = list(color = '#b814e5'), name = 'Ben Carson') %>%
+      add_trace(x = ~x6, marker = list(color = '#1F77B4'), name = 'Carly Fiorina') %>%
       add_trace(x = ~x7, marker = list(color = '#14e518'), name = 'Chris Christie') %>%
       add_trace(x = ~x8, marker = list(color = '#7214e5'), name = 'Jeb Bush') %>% 
-      add_trace(x = ~x9, marker = list(color = '#b814e5'), name = 'Mike Huckabee') %>%
-      add_trace(x = ~x10, marker = list(color = '#5e3100'), name = 'Rand Paul') %>%
+      add_trace(x = ~x9, marker = list(color = '#36dde2'), name = 'Mike Huckabee') %>%
+      add_trace(x = ~x10, marker = list(color = '#000000'), name = 'Rand Paul') %>%
       add_trace(x = ~x11, marker = list(color = '#5b585b'), name = 'Rick Santorum') %>%
       layout(xaxis = list(title = "Votes Dispersion for each State (%)",
                           showgrid = FALSE,
