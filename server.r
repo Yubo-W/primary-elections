@@ -15,16 +15,19 @@ shinyServer(function(input, output) {
   new.county <- CountyData(county)
   primary$county <- tolower(primary$county)
   joined_data <- left_join(primary, new.county, by=c("county", "state_abbreviation"))
+  #filter out any NAs and only get the columns we're interested in: race, education, income.
   final_data <- joined_data %>% na.omit() %>% 
     select(state, state_abbreviation, county, party, candidate, votes,
            SEX255214, RHI225214, RHI325214, RHI425214, RHI525214, RHI625214,
            RHI725214, RHI825214, EDU635213, EDU685213, INC110213)
+  #name columns to make it easier for us to understand
   colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                             'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                             'white', 'highschool', 'bachelors', 'income')
   
   ######################################################################################
   # Data frame for data in New Hampshire and Louisiana.
+  # Reason for having to do this extra step explained in README on github
   temp.primary <- primary %>%
     filter(state_abbreviation == 'LA' | state_abbreviation == 'NH')
   
@@ -50,9 +53,16 @@ shinyServer(function(input, output) {
                              'white', 'highschool', 'bachelors', 'income')
   ######################################################################################
   
-  # Making the final data, joining previous final data with manually created dataframe for NH and LA.
+  
+  # Making the final data
+  # Joining previous final data with manually created dataframe for NH and LA.
   final_data <- rbind(final_data, joined_data)
-    
+  
+  
+  
+  ######################################################################################
+  # Democratic party data
+  ######################################################################################
   # Create data by county
   # Select all information except candidate and votes and filter by choosing any candidate
   join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
@@ -68,9 +78,10 @@ shinyServer(function(input, output) {
     mutate(winner = ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
   nrow(dem_by_county)
 
-
-  # Democratic Party plots.
-  # Bar plot1: democrat counties won
+  ######################################################################################
+  # Democratic party plots
+  ######################################################################################
+  # Democrat bar plot1: counties won
   output$plot1 <- renderPlotly({
     #filter based on user input
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
@@ -87,7 +98,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # bar plot2: democrat popular vote
+  # Democrat bar plot2: popular vote
   output$plot2 <- renderPlotly({
     #filter based on user input
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
@@ -104,7 +115,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # pie chart 1: democratic county wins by percent
+  # Democrat pie chart 1: county wins by percent
   output$plot3 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -122,7 +133,7 @@ shinyServer(function(input, output) {
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  # pie chart 2: Overall democratic popular vote by percent.
+  # Democrat pie chart 2: overall popular vote by percent.
   output$plot4 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -140,8 +151,7 @@ shinyServer(function(input, output) {
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  
-  # By State Stacked Bar chart
+  # Democrat stacked bar chart: by state
   output$plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -160,7 +170,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # By State Map
+  # Democrat map: by state
   output$plot6 <- renderPlotly({
     filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -216,8 +226,14 @@ shinyServer(function(input, output) {
     return (table)
   })
 
+  
 
+  
+  
   ######################################################################################
+  # Republican party data
+  ######################################################################################
+  
   # Republican by County data.
   mod_rep <- final_data %>% filter(party == "Republican") %>% select(-candidate, -votes)
   
@@ -270,10 +286,10 @@ shinyServer(function(input, output) {
   rep_by_county <- rep_by_county %>% 
     select(-remove, -row)
   ######################################################################################
+  # Republican party plots
+  ######################################################################################
   
-  # Republican Party plots.
-  
-  # bar plot1: republican counties won
+  # Republican bar plot1: republican counties won
   output$rep_plot1 <- renderPlotly({
     #filter based on user input
     filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3, input$rep_race4,
@@ -309,7 +325,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # bar plot2: republican popular vote
+  # Republican bar plot2: republican popular vote
   output$rep_plot2 <- renderPlotly({
     #filter based on user input
     filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3, input$rep_race4,
@@ -347,7 +363,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # Republican pie chart 1: republican candidates with counties won.
+  # Republican pie chart 1: candidates with counties won.
   output$rep_plot3 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3,
                                      input$rep_race4, input$rep_education1, input$rep_education2, input$rep_income1)
@@ -382,7 +398,7 @@ shinyServer(function(input, output) {
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  # Republican pie chart 2: republican overall state vote data.
+  # Republican pie chart 2: overall state vote data.
   output$rep_plot4 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$rep_race1, input$rep_race2, input$rep_race3,
                                      input$rep_race4, input$rep_education1, input$rep_education2, input$rep_income1)
@@ -418,7 +434,7 @@ shinyServer(function(input, output) {
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  # Republican Stack Bar Vertical
+  # Republican vertical stacked bar chart: by state
   output$rep_plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
@@ -445,7 +461,7 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # Horizontal Stack Bar: State vote dispersion percentage.
+  # Republican horizontal stacked chart: by state percentage.
   output$rep_plot6 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
