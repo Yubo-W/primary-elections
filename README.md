@@ -5,7 +5,7 @@
 The project is a web application built using Shiny, and is deployed to the Shiny servers and can be accessed by clicking the "Final Project" below:  
 
 [**Final Project**](https://soichi.shinyapps.io/primary-elections/)  
-[**Final Project** (Backup link, in case first link has connection issues)](https://wynhsu.shinyapps.io/final-project-I-mWithHer/)  
+[(Backup link, in case first link has connection issues)](https://wynhsu.shinyapps.io/final-project-I-mWithHer/)  
 Source of data: https://www.kaggle.com/benhamner/2016-us-election
 <br>
 
@@ -83,7 +83,7 @@ ___
 ___
 
 ### Fun Facts:
-## Democratic Party
+#### Democratic Party
 - Hillary wins the overall popular vote with 57.3% and county percentage of 58.4%.
 - Bernie loses the overall popular vote with 42.7% and county percentage of 41.6%.
 
@@ -99,7 +99,7 @@ ___
 - Hillary's pecentage of counties won goes up to around 80% if you only look at counties where the the average income is less than $30,000.
 - Hillary's pecentage of counties won goes up to around 80% if you only look at counties where the the average income is greater than $80,000.
 
-## Republican Party
+#### Republican Party
 - Donald Trump wins the overall popular vote with 45.8% and county percentage of 74%.
 - Ted Cruz leads with the overall popular vote of 26.8% and county percentage of 22.8%.
 
