@@ -1,13 +1,10 @@
 
-# setwd('/Users/iguest/Documents/final-project-I-mWithHer')
 primary <- read.csv('./data/primary_results.csv', stringsAsFactors = FALSE)
 county <- read.csv('./data/county_facts.csv', stringsAsFactors = FALSE)
 source("./scripts/functions.R")
 
-
-
-#create final data frame
-new.county <- SortData(county)
+# Creating the finalized data frame, joining the county and voting data together.
+new.county <- CountyData(county)
 primary$county <- tolower(primary$county)
 joined_data <- left_join(primary, new.county, by=c("county", "state_abbreviation"))
 final_data <- joined_data %>% na.omit() %>% 
@@ -17,17 +14,14 @@ final_data <- joined_data %>% na.omit() %>%
 colnames(final_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                           'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                           'white', 'highschool', 'bachelors', 'income')
-
-#############################################################
-# Manually adding in Louisiana and New Hampshire
-
+# Data frame for data in New Hampshire and Louisiana.
 temp.primary <- primary %>%
   filter(state_abbreviation == 'LA' | state_abbreviation == 'NH')
 
 temp.county <- county %>% 
   filter(state_abbreviation == 'LA' | state_abbreviation == 'NH')
 
-new.temp.county <- SortData(temp.county)
+new.temp.county <- CountyData(temp.county)
 temp.primary$county <- tolower(temp.primary$county)
 temp_join_LA <- left_join(temp.primary, new.temp.county, by=c("fips")) %>% filter(state_abbreviation.x == 'LA')
 temp_join_LA <- temp_join_LA %>% select(-county.y, -state_abbreviation.y, -fips)
@@ -44,35 +38,35 @@ joined_data <- rbind(temp_join_LA, temp_join_NH) %>%
 colnames(joined_data) <- c('state', 'abb', 'county', 'party', 'candidate', 'votes',
                            'female', 'black', 'indian', 'asian', 'hawaiian', 'multi', 'hispanic',
                            'white', 'highschool', 'bachelors', 'income')
-#############################################################
 
+# Making the final data, joining previous final data with manually created dataframe for NH and LA.
 final_data <- rbind(final_data, joined_data)
 
 # Create data by county
-#select all information except candidate and votes and filter by choosing any candidate
+# Select all information except candidate and votes and filter by choosing any candidate
 join_with <- final_data  %>% filter(candidate == 'Bernie Sanders') %>%
   select(-candidate, -votes)
 
+# Candidates by county.
 bernie_by_county <- ByCounty(final_data, "Bernie Sanders")
 hillary_by_county <- ByCounty(final_data, "Hillary Clinton")
 
-#Join data
+# Join candidates data.
 dem_by_county <- left_join(join_with, bernie_by_county, by=c("abb", "county")) %>%
   left_join(., hillary_by_county, by=c("abb", "county")) %>% 
   mutate(winner = ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"), z = ifelse(winner == "Bernie", 1, 0))
 nrow(dem_by_county)
 
-bernie_counties <- nrow(dem_by_county %>% filter(winner=="Bernie"))
-hillary_counties <- nrow(dem_by_county %>% filter(winner=="Hillary"))
-
-plot_ly(x = "Bernie", name = "Bernie", y = bernie_counties, type = "bar", marker = list(color = "#blue")) %>%
-  add_trace(x = "Hillary", name = "Hillary", y = hillary_counties, marker = list(color = "#orange")) %>%
-  layout(title = "Number of Counties Won",
-         xaxis = list(title = "Candidates "),
-         yaxis = list(title = 'Counties won', range=c(0, 1800)))
 
 
-#################################################################
+
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+
+
 # pie chart
 View(dem_by_county)
 
@@ -106,7 +100,7 @@ plot_ly(labels = names, values = votes_percent, type = 'pie') %>%
 
 
 #################################################################
-View(dem_by_county)
+# View(dem_by_county)
 bernie_by_state <- ByState(dem_by_county, "Bernie Sanders")
 hillary_by_state <- ByState(dem_by_county, "Hillary Clinton")
 dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
@@ -114,6 +108,10 @@ dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb",
          z = ifelse(winner == "Bernie", 1, 0))
 View(dem_by_state)
 
+
+dem_by_state$hover <- with(dem_by_state, paste( 
+        'Winner:', winner, '<br>', 'Hillary votes:', Hillary_Clinton, '<br>', 'Bernie votes:', Bernie_Sanders,
+         state, '<br>', '# of counties:', county))
 
 
 l <- list(color = toRGB("white"), width = 2)
@@ -127,7 +125,8 @@ g <- list(
 plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
   add_trace(
     z = ~z,
-    text = ~winner,
+    text = ~hover,
+    hoverinfo = "text",
     locations = ~abb,
     color = ~z,
     colors = c('#1F77B4', '#FF7F0E'),
@@ -141,7 +140,7 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
   )
 
 #################################################################
-
+# tables
 bernie_electoral <- nrow(dem_by_state %>% filter(winner == "Bernie"))
 hillary_electoral <- nrow(dem_by_state %>% filter(winner == "Hillary"))
 total_states <- bernie_electoral + hillary_electoral

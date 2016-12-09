@@ -29,7 +29,7 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                              
                              # Democratic party statistics tab.
                              tabPanel('Democratic',
-                                      titlePanel('Primary Election Statistics'),
+                                      titlePanel('Democratic Party Statistics'),
                                       br(),
                                       br(),
                                       br(),
@@ -94,7 +94,7 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                              
                              # Tab for Republican party statistics.
                              tabPanel('Republican',
-                                      titlePanel('Primary Election Statistics'),
+                                      titlePanel('Republican Party Statistics'),
                                       br(),
                                       br(),
                                       br(),

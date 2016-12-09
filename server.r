@@ -169,6 +169,10 @@ shinyServer(function(input, output) {
     dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
       mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
              z = ifelse(winner == "Bernie", 1, 0))
+    # create hover over
+    dem_by_state$hover <- with(dem_by_state, paste( 
+      'Winner:', winner, '<br>', 'Hillary votes:', Hillary_Clinton, '<br>', 'Bernie votes:', Bernie_Sanders, '<br>',
+      'State:', state, '<br>', '# of counties:', county))
   
     l <- list(color = toRGB("white"), width = 2)
     # specify some map projection/options
@@ -181,7 +185,8 @@ shinyServer(function(input, output) {
     p <- plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
       add_trace(
         z = ~z,
-        text = ~winner,
+        text = ~hover,
+        hoverinfo = "text",
         locations = ~abb,
         color = ~z,
         colors = c('#1F77B4', '#FF7F0E')
