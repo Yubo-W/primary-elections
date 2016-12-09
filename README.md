@@ -4,7 +4,7 @@
 
 The project is a web application built using Shiny, and is deployed to the Shiny servers and can be accessed by clicking the "Final Project" below:  
 
-[**Final Project**](https://yubo-w.shinyapps.io/final-project-i-mwithher/)  
+[**Final Project**](https://soichi.shinyapps.io/primary-elections/)  
 [**Final Project** (Backup link, in case first link has connection issues)](https://wynhsu.shinyapps.io/final-project-I-mWithHer/)  
 Source of data: https://www.kaggle.com/benhamner/2016-us-election
 <br>
@@ -80,7 +80,30 @@ ___
 5. Merge conflicts on Github. 
    * **Solution:** All group members needed to understand how to resolve merge conflicts. We also made a github cheat sheet so we can just copy and paste the commands on the paper such as `git pull --rebase origin master `.
 
+___
 
+### Fun Facts:
+## Democratic Party
+- Hillary wins the overall popular vote with 57.3% and county percentage of 58.4%.
+- Bernie loses the overall popular vote with 42.7% and county percentage of 41.6%.
+
+- Bernie loses all counties if you only look at counties with at least 25% African Americans.
+- Bernie beats Hillary (both counties and overall) if you only look at counties with at least 68% Caucasians.
+- Hillary wins 95% of counties if you only look at counties with at least 50% Hispanics.
+- Changing the Asian percentage doesn't have much effect on the Democratic votes.
+
+- Hillary's pecentage of counties won goes up to around 80% if you only look at counties where the percentage of high school graduates was less than 80%.
+- Hillary's pecentage of counties won goes up to around 75% if you only look at counties wwhere the percentage of college graduates was less than 10%.
+- Bernie beats Hillary in percentage of counties won if you only look at counties where the percentage of college graduates was greater than 55%.
+
+- Hillary's pecentage of counties won goes up to around 80% if you only look at counties where the the average income is less than $30,000.
+- Hillary's pecentage of counties won goes up to around 80% if you only look at counties where the the average income is greater than $80,000.
+
+## Republican Party
+- Donald Trump wins the overall popular vote with 45.8% and county percentage of 74%.
+- Ted Cruz leads with the overall popular vote of 26.8% and county percentage of 22.8%.
+
+- Ted Cruz takes the lead for the popular vote if you only look at counties where the percentage of high school graduates was less than 60%.
 
 
 

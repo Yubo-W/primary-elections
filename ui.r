@@ -128,7 +128,7 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                                           br(),
                                           br(),
                                           h3("Income"),
-                                          sliderInput("rep_income1", label=h4("Household Income"), min = 0, max = 100000,  value = c(0, 100000))
+                                          sliderInput("rep_income1", label=h4("Average Household Income"), min = 0, max = 100000,  value = c(0, 100000))
                                         ),
                                       
                                       # Tab for the display of plots.

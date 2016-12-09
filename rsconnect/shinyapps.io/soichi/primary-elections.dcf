@@ -1,0 +1,9 @@
+name: primary-elections
+account: soichi
+server: shinyapps.io
+appId: 143439
+bundleId: 641770
+url: https://soichi.shinyapps.io/primary-elections/
+when: 1481264721.76449
+asMultiple: FALSE
+asStatic: FALSE
