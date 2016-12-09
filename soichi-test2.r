@@ -142,11 +142,12 @@ plot_geo(dem_by_state, locationmode = 'USA-states', showscale = FALSE) %>%
 
 #################################################################
 
-smoke <- matrix(c(51,43,22,92,28,21,68,22,9),ncol=3,byrow=TRUE)
-colnames(o) <- c("High","Low","Middle")
-rownames(o) <- c("current","former","never")
-smoke <- as.table(smoke)
-smoke
+bernie_electoral <- nrow(dem_by_state %>% filter(winner == "Bernie"))
+hillary_electoral <- nrow(dem_by_state %>% filter(winner == "Hillary"))
+total_states <- bernie_electoral + hillary_electoral
+winner <- ifelse(bernie_electoral > hillary_electoral, "Bernie", "Hillary")
 
-
+table <- data.frame(bernie_electoral, hillary_electoral, total_states, winner)
+colnames(table) <- c("Bernie","Hillary", "States with data", "Winner")
+table
 

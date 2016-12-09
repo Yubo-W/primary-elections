@@ -192,6 +192,25 @@ shinyServer(function(input, output) {
       )
     return (p)
   })
+  output$table <- renderTable({
+    filtered.df <- FilterByUserInput(dem_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
+    
+    bernie_by_state <- ByState(filtered.df, "Bernie Sanders")
+    hillary_by_state <- ByState(filtered.df, "Hillary Clinton")
+    dem_by_state <- left_join(bernie_by_state, hillary_by_state, by=c("state","abb","county")) %>%
+      mutate(winner= ifelse(Bernie_Sanders > Hillary_Clinton, "Bernie", "Hillary"),
+             z = ifelse(winner == "Bernie", 1, 0))
+    
+    bernie_electoral <- nrow(dem_by_state %>% filter(winner == "Bernie"))
+    hillary_electoral <- nrow(dem_by_state %>% filter(winner == "Hillary"))
+    total_states <- bernie_electoral + hillary_electoral
+    winner <- ifelse(bernie_electoral > hillary_electoral, "Bernie", "Hillary")
+    
+    table <- data.frame(bernie_electoral, hillary_electoral, total_states, winner)
+    colnames(table) <- c("Bernie","Hillary", "States with data", "Winner")
+    return (table)
+  })
+
 
   ######################################################################################
   # Republican by County data.

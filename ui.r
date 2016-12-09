@@ -73,7 +73,17 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                           plotlyOutput('plot5'),
                                           br(),
                                           br(),
-                                          plotlyOutput('plot6')
+                                          fluidRow(
+                                            column(12, align="center",
+                                                   h4("States Won Summary Table"),
+                                                   tableOutput('table')
+                                            )
+                                          ),
+                                          br(),
+                                          br(),
+                                          plotlyOutput('plot6'),
+                                          br(),
+                                          br()
                                         )
                                       )
                              ),
