@@ -66,11 +66,14 @@ ___
 18. We finally finished!
 
 ___
-1. First ordered list item
-2. Another item ⋅⋅* Unordered sub-list. 
-1. Actual numbers don't matter, just that it's a number
-* Ordered sub-list
-4. And another item. * nested
+1. one
+   * nested
+
+2. two
+   * nested
+
+3. three
+   * nested
 ___
 
 ### Challenges:
