@@ -17,14 +17,12 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                                       p("Source: https://github.com/wynhsu/final-project-I-mWithHer"),
                                       br(),
                                       p("This data conatins files from two different CSV files. The first CSV file contains data on the results of the primary election
-                                        in 2016. There are, in total, data that is displayed from 46 states. The other 4 states are not included in the visualization for
+                                        in 2016. We display data for the Democratic and Republican party across 46 states. The other 4 states (Alaska, Kansas, Minnesota, & North Dakota) are not included in the visualization for
                                         various reasons. The reasons are all documented in the GitHub repo's README. The link to the repo is provided above.
-                                        Our data also comes reliable sources, such as CNN and the US Census, which is where the data we used originally came from. The data
-                                        we used allowed us to draw bar graphs, pie charts, and maps to visualize the data. All the data drawn is done using Plotly, and
-                                        visual is provided for the two largest parties involved United States Politics, the Democratic and Republican party."),
-                                      p("Further documentation can be found on the GitHub repo. The link is provided above and it goes much more into detail of the aspects
-                                        of this Shiny web application. Including the reasoning for why data is not displayed in the visualizations and the 
-                                        user input functions."),
+                                        Our data originally comes from reliable sources such as CNN and the US Census. The data
+                                        we used allowed us to draw bar graphs, pie charts, and maps to visualize the data. The data wrangling was done with R, the charts were creating using the Plotly library, and
+                                        the interactivity was done with the Shiny framework."),
+                                      p("Further documentation can be found on the GitHub repo. The link is provided above and it goes into much more detail."),
                                       br(),
                                       h4('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hsu')
                                       ),

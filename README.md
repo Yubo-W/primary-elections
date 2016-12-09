@@ -42,3 +42,33 @@ This web application shows the 2016 United States presidential primary for 46 st
 - Kansas: Votes by congressional districts, so it cannot be mapped on a county map.
 - Minnesota: Data is missing from primary election results file.
 - North Dakota: Votes by districts, so cannot be mapped on a county map.
+
+___
+
+### Our Process:
+1. We searched online for data and found 2 CSV files from Ben Hammer. One CSV file displayed data about how many votes went into each candidate from every county, and the other displayed county information such as the ethnical dispersion, education level percentages, and average income.
+2. We combined the 2 CSV files using left_join and joining them by the primay and foreign keys.
+3. The keys for 2 states, Louisiana and New Hamshire, didn't match for whatever reason so we had to manually add these states.
+4. We filtered out and kepy only the category columns we were interested in: data on ethnical percentages, education level percentages, and average income.
+5. Once we had our data ready to use, we built our ui.r and server.R to build our Shiny web application.
+6. We built the basic layout in ui.r and created a nav bar with multiple tabs.
+7. We built a side bar with sliders (for ethnicity, education, and income) in ui.r to take in user input: users can adjust it to manipulate the data based on ethnicity, education, and income.
+8. We made a seprate functions.R file under our scripts file to store all our functions.
+9. We made a function to take in all the user inputs and filter our data to only keep the range they are looking for. 
+10. We made a ByCounty function that groups our data for each column. This was necessary because the CSV file we were working with had multiple rows for different candidates for each county. We combined these rows into 1 and made new columns that would display each of their votes and the winner.
+11. We calculated the winner for each county and also the overall popular vote and made 2 bar charts for both of those for the Democratic party.
+12. We used those same numbers to make 2 pie charts which displayed percentages. Pie charts made it easier to see the differences between the candidates.
+13. We then created a ByState function that grouped the data even further to get the vote dispersions as well as the overall winner for each state.
+14. We used this new data to make a stacked bar chart and a choropleth USA map. These 2 charts worked together to effectively visualize the data. A user can now see how close the other candidate was winning for each state with the stacked bar chart, and can also easily see an overview of which candidate won in different states with the map.
+15. A quick summary table was added in the middle of these 2 state charts so users can get a quick count of how many states each candidate one.
+16. We then re-did all this work for the Republican candidates. The difficulty was that the Republican party had more than just 2 candidates.
+17. Donald Trump had won every state so we decided to replace the states map with a horizontal stacked chart instead to display percentages for each Republican candidate.
+18. We finally finished!
+
+
+
+
+
+
+
+

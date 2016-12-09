@@ -1,3 +1,12 @@
+# Gets votes of Desired candidates by county.
+ByCounty <- function(final_data, person) {
+  temp <- final_data %>% 
+    filter(candidate == person) %>% 
+    select(county = county, abb = abb, votes = votes)
+  colnames(temp)[colnames(temp) == "votes"] <- gsub(" ", "_", person)
+  return(temp)
+}
+
 # Gets votes of desired candidate by state by the filtered data.
 ByState <- function(filtered.df, person) {
   temp.name <- gsub(" ", "_", person)
@@ -7,15 +16,6 @@ ByState <- function(filtered.df, person) {
     summarize(votes = sum(votes), abb = first(abb), county = n())
   colnames(temp)[colnames(temp) == "votes"] <- temp.name
   return(temp)
-}
-
-# Gets votes of Desired candidates by county.
-ByCounty <- function(final_data, person) {
-  temp <- final_data %>% 
-    filter(candidate == person) %>% 
-    select(county = county, abb = abb, votes = votes)
-    colnames(temp)[colnames(temp) == "votes"] <- gsub(" ", "_", person)
-    return(temp)
 }
 
 # Creates a data frame through user inputs.
