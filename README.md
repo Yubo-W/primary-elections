@@ -80,10 +80,6 @@ ___
 5. Merge conflicts on Github. 
    * **Solution:** All group members needed to understand how to resolve merge conflicts. We also made a github cheat sheet so we can just copy and paste the commands on the paper such as `git pull --rebase origin master `.
 
-___
-
-### Project Management:
-![alt tag](tasks.png)
 
 
 
