@@ -3,7 +3,8 @@ library(plotly)
 library(shiny)
 
 # Shiny UI
-shinyUI(fluidPage(navbarPage('Primary Election',
+shinyUI(fluidPage(theme = "bootstrap.css",
+                      navbarPage('Primary Election',
                              
                              # Tab for the introduction to this web application.
                              tabPanel('Introduction',
