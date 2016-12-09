@@ -1,8 +1,11 @@
+# Library the required packages.
 library(plotly)
 library(shiny)
 
-
+# Shiny UI
 shinyUI(fluidPage(navbarPage('Primary Election',
+                             
+                             # Tab for the introduction to this web application.
                              tabPanel('Introduction',
                                       titlePanel('Background Information on Data'),
                                       br(),
@@ -25,6 +28,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                       h4('Collaboration project by Soichi Tanabe, Yubo Wang, and Wynston Hsu')
                                       ),
                              
+                             # Democratic party statistics tab.
                              tabPanel('Democratic',
                                       titlePanel('Primary Election Statistics'),
                                       br(),
@@ -59,6 +63,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                           sliderInput("income1", label=h4("Household Income"), min = 0, max = 100000,  value = c(0, 100000))
                                         ),
                                         
+                                        # Tab for the display of plots.
                                         mainPanel(
                                           fluidRow(
                                             splitLayout(cellWidths = c("50%", "50%"), plotlyOutput("plot1"), plotlyOutput("plot2"))
@@ -88,6 +93,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                       )
                              ),
                              
+                             # Tab for Republican party statistics.
                              tabPanel('Republican',
                                       titlePanel('Primary Election Statistics'),
                                       br(),
@@ -122,6 +128,7 @@ shinyUI(fluidPage(navbarPage('Primary Election',
                                           sliderInput("rep_income1", label=h4("Household Income"), min = 0, max = 100000,  value = c(0, 100000))
                                         ),
                                       
+                                      # Tab for the display of plots.
                                       mainPanel(
                                         fluidRow(
                                           splitLayout(cellWidths = c("50%", "50%"), plotlyOutput("rep_plot1"), plotlyOutput("rep_plot2"))

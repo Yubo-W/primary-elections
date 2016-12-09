@@ -12,7 +12,7 @@ shinyServer(function(input, output) {
   source("./scripts/functions.R")
   
   # Creating the finalized data frame, joining the county and voting data together.
-  new.county <- SortData(county)
+  new.county <- CountyData(county)
   primary$county <- tolower(primary$county)
   joined_data <- left_join(primary, new.county, by=c("county", "state_abbreviation"))
   final_data <- joined_data %>% na.omit() %>% 
@@ -24,14 +24,14 @@ shinyServer(function(input, output) {
                             'white', 'highschool', 'bachelors', 'income')
   
   ######################################################################################
-  # Data frame for dat ain New Hampshire and Louisiana.
+  # Data frame for data in New Hampshire and Louisiana.
   temp.primary <- primary %>%
     filter(state_abbreviation == 'LA' | state_abbreviation == 'NH')
   
   temp.county <- county %>% 
     filter(state_abbreviation == 'LA' | state_abbreviation == 'NH')
   
-  new.temp.county <- SortData(temp.county)
+  new.temp.county <- CountyData(temp.county)
   temp.primary$county <- tolower(temp.primary$county)
   temp_join_LA <- left_join(temp.primary, new.temp.county, by=c("fips")) %>% filter(state_abbreviation.x == 'LA')
   temp_join_LA <- temp_join_LA %>% select(-county.y, -state_abbreviation.y, -fips)
@@ -410,54 +410,12 @@ shinyServer(function(input, output) {
   output$rep_plot5 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
-    # stats
-    carson_by_state <- ByState(filtered.df, "Ben Carson")
-    trump_by_state <- ByState(filtered.df, "Donald Trump")
-    kasich_by_state <- ByState(filtered.df, "John Kasich")
-    rubio_by_state <- ByState(filtered.df, "Marco Rubio")
-    cruz_by_state <- ByState(filtered.df, "Ted Cruz")
-    fiorina_by_state <- ByState(filtered.df, "Carly Fiorina")
-    christie_by_state <- ByState(filtered.df, "Chris Christie")
-    bush_by_state <- ByState(filtered.df, "Jeb Bush")
-    huckabee_by_state <- ByState(filtered.df, "Mike Huckabee")
-    paul_by_state <- ByState(filtered.df, "Rand Paul")
-    santorum_by_state <- ByState(filtered.df, "Rick Santorum")
-    
-    # creates Republican join table by state
-    rep_by_state <- left_join(carson_by_state, trump_by_state, by=c("state","abb","county")) %>% 
-      left_join(., kasich_by_state, by=c("state","abb","county")) %>% 
-      left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
-      left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
-      left_join(., fiorina_by_state, by=c("state","abb","county")) %>% 
-      left_join(., christie_by_state, by=c("state","abb","county")) %>% 
-      left_join(., bush_by_state, by=c("state","abb","county")) %>% 
-      left_join(., huckabee_by_state, by=c("state","abb","county")) %>% 
-      left_join(., paul_by_state, by=c("state","abb","county")) %>% 
-      left_join(., santorum_by_state, by=c("state","abb","county"))
-    rep_by_state <- rep_by_state[, c('state', 'abb', 'county', 'Ben_Carson', 'Donald_Trump', 'John_Kasich',
-                                     'Marco_Rubio', 'Ted_Cruz', 'Carly_Fiorina', 'Chris_Christie', 'Jeb_Bush',
-                                     'Mike_Huckabee', 'Rand_Paul', 'Rick_Santorum')]
-    
-    rep_by_state <- rep_by_state %>% unique() %>% mutate(row = seq(1:nrow(.)))
-    rep_state_winners <- rep_by_state %>% 
-      select(-state, -abb, -county) %>% 
-      mutate(row = seq(1:nrow(.)))
-    
-    rep_state_winners$row <- seq(1:nrow(rep_state_winners))
-    
-    state_winner <- as.data.frame(cbind(row.names(rep_state_winners),apply(rep_state_winners,1,function(x)
-      names(rep_state_winners)[which(x==max(x))])))
-    state_winner$row <- seq(1:nrow(state_winner))
-    
-    rep_by_state <- left_join(rep_by_state, state_winner, by = "row")
-    names(rep_by_state)[names(rep_by_state) == "V1"] <- "remove"
-    names(rep_by_state)[names(rep_by_state) == "V2"] <- "winner"
-    rep_by_state <- rep_by_state %>% 
-      select(-remove)
+    # Republican party state dataframe
+    rep_by_state <- RepublicanStateData(filtered.df)
     
     # Stack Bar Grah
     p <- plot_ly(rep_by_state, x = ~abb, y = ~Ben_Carson, type = 'bar', name = 'Ben Carson', 
-                 marker = list(color = "##FF7F0E", 
+                 marker = list(color = "#FF7F0E", 
                                line = list(color = '#000000', width = 1))) %>%
       add_trace(y = ~Donald_Trump, name = 'Donald Trump', marker = list(color = "#1F77B4")) %>%
       add_trace(y = ~John_Kasich, name = 'John Kasich', marker = list(color = "#36dde2")) %>%
@@ -475,54 +433,12 @@ shinyServer(function(input, output) {
     return (p)
   })
   
-  # Horizontal Stack Bar
+  # Horizontal Stack Bar: State vote dispersion percentage.
   output$rep_plot6 <- renderPlotly({
     filtered.df <- FilterByUserInput(rep_by_county, input$race1, input$race2, input$race3, input$race4, input$education1, input$education2, input$income1)
     
-    # stats
-    carson_by_state <- ByState(filtered.df, "Ben Carson")
-    trump_by_state <- ByState(filtered.df, "Donald Trump")
-    kasich_by_state <- ByState(filtered.df, "John Kasich")
-    rubio_by_state <- ByState(filtered.df, "Marco Rubio")
-    cruz_by_state <- ByState(filtered.df, "Ted Cruz")
-    fiorina_by_state <- ByState(filtered.df, "Carly Fiorina")
-    christie_by_state <- ByState(filtered.df, "Chris Christie")
-    bush_by_state <- ByState(filtered.df, "Jeb Bush")
-    huckabee_by_state <- ByState(filtered.df, "Mike Huckabee")
-    paul_by_state <- ByState(filtered.df, "Rand Paul")
-    santorum_by_state <- ByState(filtered.df, "Rick Santorum")
-    
-    # creates Republican join table by state
-    rep_by_state <- left_join(carson_by_state, trump_by_state, by=c("state","abb","county")) %>% 
-      left_join(., kasich_by_state, by=c("state","abb","county")) %>% 
-      left_join(., rubio_by_state, by=c("state","abb","county")) %>% 
-      left_join(., cruz_by_state, by=c("state","abb","county")) %>% 
-      left_join(., fiorina_by_state, by=c("state","abb","county")) %>% 
-      left_join(., christie_by_state, by=c("state","abb","county")) %>% 
-      left_join(., bush_by_state, by=c("state","abb","county")) %>% 
-      left_join(., huckabee_by_state, by=c("state","abb","county")) %>% 
-      left_join(., paul_by_state, by=c("state","abb","county")) %>% 
-      left_join(., santorum_by_state, by=c("state","abb","county"))
-    rep_by_state <- rep_by_state[, c('state', 'abb', 'county', 'Ben_Carson', 'Donald_Trump', 'John_Kasich',
-                                     'Marco_Rubio', 'Ted_Cruz', 'Carly_Fiorina', 'Chris_Christie', 'Jeb_Bush',
-                                     'Mike_Huckabee', 'Rand_Paul', 'Rick_Santorum')]
-    
-    rep_by_state <- rep_by_state %>% unique() %>% mutate(row = seq(1:nrow(.)))
-    rep_state_winners <- rep_by_state %>% 
-      select(-state, -abb, -county) %>% 
-      mutate(row = seq(1:nrow(.)))
-    
-    rep_state_winners$row <- seq(1:nrow(rep_state_winners))
-    
-    state_winner <- as.data.frame(cbind(row.names(rep_state_winners),apply(rep_state_winners,1,function(x)
-      names(rep_state_winners)[which(x==max(x))])))
-    state_winner$row <- seq(1:nrow(state_winner))
-    
-    rep_by_state <- left_join(rep_by_state, state_winner, by = "row")
-    names(rep_by_state)[names(rep_by_state) == "V1"] <- "remove"
-    names(rep_by_state)[names(rep_by_state) == "V2"] <- "winner"
-    rep_by_state <- rep_by_state %>% 
-      select(-remove)
+    # Republican party state dataframe
+    rep_by_state <- RepublicanStateData(filtered.df)
     
     # calculates total Republican votes
     h_rep_by_state <- rep_by_state %>% 
