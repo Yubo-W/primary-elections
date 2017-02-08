@@ -3,9 +3,8 @@ title: final-project-I-mWithHer
 account: wynhsu
 server: shinyapps.io
 appId: 143166
-bundleId: 641762
+bundleId: 641818
 url: https://wynhsu.shinyapps.io/final-project-I-mWithHer/
-when: 1481264266.93194
+when: 1481267524.62385
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: soichi-test2.r
