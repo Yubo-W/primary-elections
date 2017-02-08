@@ -3,8 +3,8 @@ title: primary-elections
 account: wynhsu
 server: shinyapps.io
 appId: 155800
-bundleId: 705451
+bundleId: 705458
 url: https://wynhsu.shinyapps.io/primary-elections/
-when: 1486593632.50118
+when: 1486594094.02381
 asMultiple: FALSE
 asStatic: FALSE
