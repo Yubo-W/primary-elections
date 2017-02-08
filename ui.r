@@ -20,7 +20,7 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                                       br(),
                                       br(),
                                       br(),
-                                      p("This data conatins files from two different CSV files. The first CSV file contains data on the results of the primary election
+                                      p("This data contains files from two different CSV files. The first CSV file contains data on the results of the primary election
                                         in 2016. We display data for the Democratic and Republican party across 46 states. The other 4 states (Alaska, Kansas, Minnesota, & North Dakota) are not included in the visualization for
                                         various reasons. The reasons are all documented in the GitHub repo's README. The link to the repo is provided above.
                                         Our data originally comes from reliable sources such as CNN and the US Census. The data
